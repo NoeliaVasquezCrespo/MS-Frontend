@@ -30,6 +30,7 @@ import { NotfoundComponent } from './components/notfound/notfound.component';
 import { AccessComponent } from './components/access/access.component';
 
 import { BookFormsComponent } from './components/book-forms/book-forms.component';
+import { InfoFormsComponent } from './components/info-forms/info-forms.component';
 @NgModule({
     imports: [
         RouterModule.forRoot([
@@ -38,6 +39,7 @@ import { BookFormsComponent } from './components/book-forms/book-forms.component
                 children: [
                     {path: '', component: DashboardComponent},
                     {path: 'uikit/bookForm', component: BookFormsComponent},
+                    {path: 'uikit/infoForm', component: InfoFormsComponent},
                     {path: 'uikit/formlayout', component: FormLayoutComponent},
                     {path: 'uikit/input', component: InputComponent},
                     {path: 'uikit/floatlabel', component: FloatLabelComponent},
