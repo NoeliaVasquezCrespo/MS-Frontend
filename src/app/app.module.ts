@@ -142,6 +142,7 @@ import { AccessComponent } from './components/access/access.component';
 import { BookFormsComponent } from './components/book-forms/book-forms.component';
 import { InfoFormsComponent } from './components/info-forms/info-forms.component';
 import { LoansComponent } from './components/loans/loans.component';
+import { BookListComponent } from './components/book-list/book-list.component';
 @NgModule({
     imports: [
         BrowserModule,
@@ -275,7 +276,8 @@ import { LoansComponent } from './components/loans/loans.component';
         AccessComponent,
         BookFormsComponent,
         InfoFormsComponent,
-        LoansComponent
+        LoansComponent,
+        BookListComponent
     ],
     providers: [
         {provide: LocationStrategy, useClass: HashLocationStrategy},
