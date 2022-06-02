@@ -141,7 +141,7 @@ import { NotfoundComponent } from './components/notfound/notfound.component';
 import { AccessComponent } from './components/access/access.component';
 import { BookFormsComponent } from './components/book-forms/book-forms.component';
 import { InfoFormsComponent } from './components/info-forms/info-forms.component';
-
+import { LoansComponent } from './components/loans/loans.component';
 @NgModule({
     imports: [
         BrowserModule,
@@ -275,6 +275,7 @@ import { InfoFormsComponent } from './components/info-forms/info-forms.component
         AccessComponent,
         BookFormsComponent,
         InfoFormsComponent,
+        LoansComponent
     ],
     providers: [
         {provide: LocationStrategy, useClass: HashLocationStrategy},
