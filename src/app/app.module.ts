@@ -94,7 +94,6 @@ import { AppComponent } from './app.component';
 import { AppMainComponent } from './app.main.component';
 import { AppTopBarComponent } from './app.topbar.component';
 import { AppFooterComponent } from './app.footer.component';
-import { AppConfigComponent } from './app.config.component';
 import { AppMenuComponent } from './app.menu.component';
 import { AppMenuitemComponent } from './app.menuitem.component';
 
@@ -140,6 +139,7 @@ import { LoginComponent } from './components/login/login.component';
 import { ErrorComponent } from './components/error/error.component';
 import { NotfoundComponent } from './components/notfound/notfound.component';
 import { AccessComponent } from './components/access/access.component';
+import { BookFormsComponent } from './components/book-forms/book-forms.component';
 
 @NgModule({
     imports: [
@@ -236,7 +236,6 @@ import { AccessComponent } from './components/access/access.component';
         AppMainComponent,
         AppTopBarComponent,
         AppFooterComponent,
-        AppConfigComponent,
         AppMenuComponent,
         AppMenuitemComponent,
         DashboardComponent,
@@ -273,6 +272,7 @@ import { AccessComponent } from './components/access/access.component';
         ErrorComponent,
         NotfoundComponent,
         AccessComponent,
+        BookFormsComponent,
     ],
     providers: [
         {provide: LocationStrategy, useClass: HashLocationStrategy},

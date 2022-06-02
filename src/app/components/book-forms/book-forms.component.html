@@ -1,0 +1,80 @@
+<div class="grid">
+	<div class="col-12 md:col-6">
+		<div class="card p-fluid">
+			<h5>Agregar Libro</h5>
+            <p>Ingrese los datos correspondientes para agregar el libro a la lista: </p>
+			<div class="field">
+                <div>
+                    <span class="p-input-icon-left">
+                        <i class="pi pi-book"></i>
+                        <input pInputText type="text" placeholder="Título del libro" />
+                    </span>
+                </div>
+			</div>
+			<div class="field">
+				<div class="grid formgrid">
+                    <div class="col-12 mb-2 lg:col-6 lg:mb-0">
+                        <span class="p-input-icon-left">
+                            <i class="pi pi-tag"></i>
+                            <p-calendar [showIcon]="true" placeholder="Fecha de lanzamiento" [showButtonBar]="true" [(ngModel)]="selectedDate"></p-calendar>
+                        </span>
+                    </div>
+                    <div class="col-12 mb-2 lg:col-6 lg:mb-0">
+                        <span class="p-input-icon-left">
+                            <i class="pi pi-tag"></i>
+                            <input pInputText type="text" placeholder="# Páginas" />
+                        </span>
+                    </div>
+                </div>    
+			</div>
+			<div class="field">
+                <div>
+                    <span> 
+                        <p-dropdown [options]="cities" [(ngModel)]="selectedDrop" placeholder="Autor" [showClear]="true"></p-dropdown>
+                    </span>
+                </div>
+			</div>
+            <div class="field">
+                <div>
+                    <span> 
+                        <p-dropdown [options]="cities" [(ngModel)]="selectedDrop" placeholder="Editorial" [showClear]="true"></p-dropdown>
+                    </span>
+                </div>
+			</div>
+            <div class="field">
+                <div>
+                    <span> 
+                        <p-dropdown [options]="cities" [(ngModel)]="selectedDrop" placeholder="Idioma" [showClear]="true"></p-dropdown>
+                    </span>
+                </div>
+			</div>
+            <div class="field">
+                <div>
+                    <span class="p-input-icon-left">
+                        <i class="pi pi-file"></i>
+                        <input pInputText type="text" placeholder="Descripción del libro" />
+                    </span>
+                </div>
+			</div>
+            <div class="field">
+                <div>
+                    <span class="p-input-icon-left">
+                        <i class="pi pi-star-fill"></i>
+                        <input pInputText type="text" placeholder="URL de la portada" />
+                    </span>
+                </div>
+			</div>
+
+            <button pButton pRipple type="button" label="Agregar libro" class="p-button-rounded p-button-success mr-2 mb-2"></button>
+			
+		</div>
+	</div>
+
+	<div class="col-10 md:col-6">
+			<div class="flex justify-content-center">
+                <p-image src="https://img.freepik.com/foto-gratis/muchos-libros-antiguos-estanteria-sobre-fondo-simple_119973-833.jpg" alt="Image" [preview]="false"></p-image>
+            </div>  
+	</div>
+</div>
+
+
