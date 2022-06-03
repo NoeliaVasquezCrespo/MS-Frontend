@@ -2,6 +2,12 @@ import { Component, OnInit } from '@angular/core';
 import { CountryService } from '../../service/countryservice';
 import { NodeService } from '../../service/nodeservice';
 import { SelectItem } from 'primeng/api';
+import { LoansService } from '../../service/loans.service';
+import {FormGroup, FormControl, Validators, FormBuilder} from '@angular/forms'
+import { LoanDetailsService } from '../../service/loansdetails.service';
+import { Loan } from '../../api/Loan';
+import { LoanDetails } from '../../api/LoanDetails';
+
 @Component({
   selector: 'app-info-forms',
   templateUrl: './loans.component.html',
@@ -49,49 +55,46 @@ import { SelectItem } from 'primeng/api';
 `]
 })
 export class LoansComponent implements OnInit {
+    prestamo: Loan;
+    datosPrestamo: FormGroup;
+    detallePrestamo: LoanDetails;
+    detallePrestamo2: LoanDetails;
+    detallePrestamo3: LoanDetails;
+
+    fechaAct = new Date();
+    fechaRet = new Date();
+
     countries: any[];
-
     filteredCountries: any[];
-
     selectedCountryAdvanced: any[];
-
     valSlider = 50;
-
     valColor = '#424242';
-
     valRadio: string;
-
     valCheck: string[] = [];
-
     valSwitch: boolean;
-
     cities: SelectItem[];
-
     selectedList: SelectItem;
-
     selectedDrop: SelectItem;
-
     selectedMulti: string[] = [];
-
     treeSelectNodes: any[];
-
     selectedNode: SelectItem;
-
     valToggle = false;
-
     paymentOptions: any[];
-
     valSelect1: string;
-
     valSelect2: string;
-
     valueKnob = 20;
-
     selectedDate:any;
 
-    constructor(private countryService: CountryService, private nodeService: NodeService) {}
+    constructor(private loansService:LoansService , private fb:FormBuilder,
+        private countryService: CountryService, private nodeService: NodeService) {
+        this.datosPrestamo=this.fb.group({
+            clientId: new FormControl('', Validators.required),
+            returnDate: new FormControl('', Validators.required)
+          })
+    }
 
     ngOnInit() {
+        
         this.countryService.getCountries().then(countries => {
             this.countries = countries;
         });
@@ -124,5 +127,22 @@ export class LoansComponent implements OnInit {
         }
 
         this.filteredCountries = filtered;
+    }
+
+    addLoan(){
+        let addLoans:Loan={
+            clientId: this.datosPrestamo.value.clientId,
+            loanDate: this.fechaAct,
+            returnDate: this.fechaRet,
+            status: 1
+        }
+       
+        this.loansService.addLoan(addLoans).subscribe(
+            resp => {
+              console.log("Prestamo Registrado");
+              console.log(resp);
+            }, error => {
+              console.log("error");
+           });
     }
 }

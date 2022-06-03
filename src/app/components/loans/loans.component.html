@@ -4,34 +4,28 @@
 			<h5>Agregar Prestamo</h5>
             <p>Ingrese los datos correspondientes para agregar un nuevo prestamo: </p>
             <div class="field">
-                <form>
+                <form [formGroup]="datosPrestamo">
                     <h5>Usuario</h5>
-			        <p-autoComplete placeholder="Buscar Usuario" id="dd" [dropdown]="true" [multiple]="true" [suggestions]="filteredCountries" (completeMethod)="filterCountry($event)" field="name"></p-autoComplete>
+                    <p-inputNumber formControlName="clientId" from placeholder="userId" mode="decimal" [showButtons]="true" [min]="0" [max]="100">
+                    </p-inputNumber>
                     
                     <h5>Fecha de Retorno</h5>
                     <p-calendar placeholder="Fecha De Retorno" [showIcon]="true" [showButtonBar]="true" [(ngModel)]="selectedDate"></p-calendar>
                     
                     <h5>Listado de Libros</h5>
-            
-                    <p-multiSelect [options]="countries" [(ngModel)]="selectedMulti" defaultLabel="Select a Country" optionLabel="name" class="multiselect-custom">
-                        <ng-template let-value pTemplate="selectedItems">
-                            <div class="country-item country-item-value inline-flex align-items-center py-1 px-2 bg-primary text-primary border-round mr-2" *ngFor="let option of selectedMulti">
-                                <div>{{option.name}}</div>
-                            </div>
-                            <div *ngIf="!selectedMulti || selectedMulti.length === 0" class="country-placeholder">
-                                Listado de Libros
-                            </div>
-                        </ng-template>
-                        <ng-template let-country pTemplate="item">
-                            <div class="flex align-items-center country-item">
-                                <img src="assets/demo/flags/flag_placeholder.png" [class]="'mr-2 flag flag-' + country.code.toLowerCase()" style="width:18px; height:12px;"/>
-                                <div>{{country.name}}</div>
-                            </div>
-                        </ng-template>
-                    </p-multiSelect>
+                    
+                    <h5>Libro 1</h5>
+                    <p-inputNumber mode="decimal" [showButtons]="true" [min]="0" [max]="100">
+                    </p-inputNumber>
+                    <h5>Libro 2</h5>
+                    <p-inputNumber  mode="decimal" [showButtons]="true" [min]="0" [max]="100">
+                    </p-inputNumber>
+                    <h5>Libro 3</h5>
+                    <p-inputNumber mode="decimal" [showButtons]="true" [min]="0" [max]="100">
+                    </p-inputNumber>
                 </form>
 			</div>
-            <button pButton pRipple type="button" label="Agregar Prestamo" class="p-button-rounded p-button-success mr-2 mb-2"></button>		
+            <button pButton pRipple type="button" (click)="addLoan()" label="Agregar Prestamo" class="p-button-rounded p-button-success mr-2 mb-2"></button>		
 		</div>
 	</div>
 </div>
