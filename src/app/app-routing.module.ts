@@ -33,6 +33,7 @@ import { BookFormsComponent } from './components/book-forms/book-forms.component
 import { BookListComponent } from './components/book-list/book-list.component';
 import { InfoFormsComponent } from './components/info-forms/info-forms.component';
 import { LoansComponent } from './components/loans/loans.component';
+import {ClientFormsComponent} from "./components/client-forms/client-forms.component";
 
 @NgModule({
     imports: [
@@ -41,6 +42,7 @@ import { LoansComponent } from './components/loans/loans.component';
                 path: '', component: AppMainComponent,
                 children: [
                     {path: '', component: DashboardComponent},
+                    {path: 'uikit/clientForm', component: ClientFormsComponent},
                     {path: 'uikit/bookForm', component: BookFormsComponent},
                     {path: 'uikit/infoForm', component: InfoFormsComponent},
                     {path: 'uikit/bookList', component: BookListComponent},

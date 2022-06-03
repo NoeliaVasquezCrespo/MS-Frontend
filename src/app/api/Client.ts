@@ -5,5 +5,5 @@ export interface Client {
     email: string;
     phone: number;
     addressId: number;
-    status: number;
+    status?: number;
 }

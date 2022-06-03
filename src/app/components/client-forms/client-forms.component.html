@@ -1,0 +1,54 @@
+<div class="grid">
+    <div class="col-12 md:col-6">
+        <div class="card p-fluid">
+            <h5>Agregar Cliente</h5>
+            <p>Ingrese los datos correspondientes para agregar el cliente a la lista: </p>
+
+            <div class="field">
+                <div>
+                    <span class="p-input-icon-left">
+                        <i class="pi pi-book"></i>
+                        <input pInputText type="text" [(ngModel)]="nombreCliente" placeholder="Nombres del cliente" />
+                    </span>
+                </div>
+            </div>
+            <div class="field">
+                <div>
+                    <span class="p-input-icon-left">
+                        <i class="pi pi-book"></i>
+                        <input pInputText type="text" [(ngModel)]="apellidosCliente" placeholder="Apellidos del cliente" />
+                    </span>
+                </div>
+            </div>
+            <div class="field">
+                <div>
+                    <span class="p-input-icon-left">
+                        <i class="pi pi-book"></i>
+                        <input pInputText type="text" [(ngModel)]="correoElectronico" placeholder="Correo Electronico" />
+                    </span>
+                </div>
+            </div>
+
+
+            <div class="field">
+                <div>
+                    <span class="p-input-icon-left">
+                        <i class="pi pi-book"></i>
+                        <input pInputText type="number" [(ngModel)]="numeroTelefonico" placeholder="Numero Telefonico" />
+                    </span>
+                </div>
+            </div>
+
+            <div class="field">
+                <div>
+                    <span>
+                        <p-dropdown [options]="addresses" [(ngModel)]="selectedDrop" placeholder="Seleccione una direccion" [showClear]="true"></p-dropdown>
+                    </span>
+                </div>
+            </div>
+
+            <button pButton pRipple (click)="agregarCliente()" type="button" label="Agregar Cliente" class="p-button-rounded p-button-success mr-2 mb-2"></button>
+
+        </div>
+    </div>
+</div>
