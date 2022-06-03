@@ -143,8 +143,11 @@ import { BookFormsComponent } from './components/book-forms/book-forms.component
 import { InfoFormsComponent } from './components/info-forms/info-forms.component';
 import { LoansComponent } from './components/loans/loans.component';
 import { BookListComponent } from './components/book-list/book-list.component';
+import { MaterialModule } from './material.module';
+
 @NgModule({
     imports: [
+        MaterialModule,
         BrowserModule,
         FormsModule,
         ReactiveFormsModule,
