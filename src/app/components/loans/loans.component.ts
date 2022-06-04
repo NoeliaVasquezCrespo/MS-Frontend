@@ -1,7 +1,18 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit,ViewChild } from '@angular/core';
 import { CountryService } from '../../service/countryservice';
 import { NodeService } from '../../service/nodeservice';
 import { SelectItem } from 'primeng/api';
+import { LoansService } from '../../service/loans.service';
+import {MatTableDataSource} from '@angular/material/table';
+import {MatSort, Sort} from '@angular/material/sort';
+import {MatPaginator} from '@angular/material/paginator';
+import {LiveAnnouncer} from '@angular/cdk/a11y';
+import {FormGroup, FormControl, Validators, FormBuilder} from '@angular/forms';
+import { LoanDetailsService } from '../../service/loansdetails.service';
+import { Loan } from '../../api/Loan';
+import { LoanDetails } from '../../api/LoanDetails';
+import { Book } from '../../api/Book';
+
 @Component({
   selector: 'app-info-forms',
   templateUrl: './loans.component.html',
@@ -49,80 +60,100 @@ import { SelectItem } from 'primeng/api';
 `]
 })
 export class LoansComponent implements OnInit {
+    prestamo: Loan;
+    datosPrestamo: FormGroup;
+    detallePrestamo: LoanDetails;
+    detallePrestamo2: LoanDetails;
+    detallePrestamo3: LoanDetails;
+
+    dataSource = new MatTableDataSource();
+    fechaAct = new Date();
+
+    @ViewChild(MatPaginator) paginatorProducts!: MatPaginator;
+    dataSourceProducts!: MatTableDataSource<Book>;
+
+    @ViewChild(MatPaginator, {static:true}) paginator: MatPaginator;
+    @ViewChild(MatSort) sort: MatSort;
+
+
+    applyFilter(event: Event) {
+        const filterValue = (event.target as HTMLInputElement).value;
+        this.dataSource.filter = filterValue.trim().toLowerCase();
+    }
+    books:Book[] = [];
+    displayedColumns: string[] = ['id', 'nombre', 'apellido', 'correo', 'edad','opciones'];
     countries: any[];
-
     filteredCountries: any[];
-
     selectedCountryAdvanced: any[];
-
     valSlider = 50;
-
     valColor = '#424242';
-
     valRadio: string;
-
     valCheck: string[] = [];
-
     valSwitch: boolean;
-
     cities: SelectItem[];
-
     selectedList: SelectItem;
-
     selectedDrop: SelectItem;
-
     selectedMulti: string[] = [];
-
     treeSelectNodes: any[];
-
     selectedNode: SelectItem;
-
     valToggle = false;
-
     paymentOptions: any[];
-
     valSelect1: string;
-
     valSelect2: string;
-
     valueKnob = 20;
-
     selectedDate:any;
 
-    constructor(private countryService: CountryService, private nodeService: NodeService) {}
-
-    ngOnInit() {
-        this.countryService.getCountries().then(countries => {
-            this.countries = countries;
-        });
-
-        this.cities = [
-            {label: 'New York', value: {id: 1, name: 'New York', code: 'NY'}},
-            {label: 'Rome', value: {id: 2, name: 'Rome', code: 'RM'}},
-            {label: 'London', value: {id: 3, name: 'London', code: 'LDN'}},
-            {label: 'Istanbul', value: {id: 4, name: 'Istanbul', code: 'IST'}},
-            {label: 'Paris', value: {id: 5, name: 'Paris', code: 'PRS'}}
-        ];
-
-        this.paymentOptions = [
-            {name: 'Option 1', value: 1},
-            {name: 'Option 2', value: 2},
-            {name: 'Option 3', value: 3}
-        ];
-
-        this.nodeService.getFiles().then(files => this.treeSelectNodes = files)
+    constructor(private loansService:LoansService , private fb:FormBuilder, private _liveAnnouncer: LiveAnnouncer,
+        private countryService: CountryService, private nodeService: NodeService) {
+        this.datosPrestamo=this.fb.group({
+            clientId: new FormControl('', Validators.required),
+            returnDate: new FormControl('', Validators.required)
+          })
     }
 
-    filterCountry(event) {
-        const filtered: any[] = [];
-        const query = event.query;
-        for (let i = 0; i < this.countries.length; i++) {
-            const country = this.countries[i];
-            if (country.name.toLowerCase().indexOf(query.toLowerCase()) == 0) {
-                filtered.push(country);
-            }
+    async ngOnInit() :Promise<void>{
+        this.books = [];
+        this.dataSource.data = this.books;
+    }
+    ngAfterViewInit(){
+        this.dataSource.paginator= this.paginator;
+        this.dataSource.sort = this.sort;
+      }
+    
+      announceSortChange(sortState: Sort) {
+        if (sortState.direction) {
+          this._liveAnnouncer.announce(`Sorted ${sortState.direction}ending`);
+        } else {
+          this._liveAnnouncer.announce('Sorting cleared');
         }
+      }
 
-        this.filteredCountries = filtered;
+    async getAdminData(){
+        /*let respuesta;
+        console.log("PRIMER METODO");
+        await this.adminlistService. getListProvider().toPromise().then((response) => {
+          respuesta = response;
+        }).catch(e => console.error(e));
+    
+        return respuesta;*/
+    }
+    
+    
+
+    addLoan(){
+        let addLoans:Loan={
+            clientId: this.datosPrestamo.value.clientId,
+            loanDate: this.fechaAct,
+            returnDate: this.datosPrestamo.value.returnDate,
+            status: 1
+        }
+       console.log(this.datosPrestamo.value.returnDate);
+        this.loansService.addLoan(addLoans).subscribe(
+            resp => {
+              console.log("Prestamo Registrado");
+              console.log(resp);
+            }, error => {
+              console.log("error");
+           });
     }
 }
