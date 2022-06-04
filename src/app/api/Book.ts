@@ -8,5 +8,6 @@ export interface Book {
     pages: number;
     description: string;
     bookCover: string;
+    stock: number;
     status: number;
 }

@@ -2,7 +2,7 @@ import { Component, OnInit,ViewChild } from '@angular/core';
 import { CountryService } from '../../service/countryservice';
 import { NodeService } from '../../service/nodeservice';
 import { SelectItem } from 'primeng/api';
-import { LoansService } from '../../service/loans.service';
+import { LoansService } from '../../service/service-project/loans.service';
 import {MatTableDataSource} from '@angular/material/table';
 import {MatSort, Sort} from '@angular/material/sort';
 import {MatPaginator} from '@angular/material/paginator';

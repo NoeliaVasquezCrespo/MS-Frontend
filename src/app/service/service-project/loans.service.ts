@@ -2,14 +2,14 @@ import {HttpClient} from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs/internal/Observable';
 import { map } from 'rxjs/operators';
-import { Loan } from '../api/Loan';
+import { Loan } from '../../api/Loan';
 
 @Injectable({
     providedIn: 'root'
   })
 export class LoansService {
-    private baseUrl:string = 'http://localhost:8080/v1/api/';
-
+    // private baseUrl:string = 'http://localhost:8080/v1/api/';
+    private baseUrl:string = 'http://localhost:8990/v1/api/';
     constructor(private http:HttpClient){ }
 
     getAllLoans():Observable<Loan[]>{

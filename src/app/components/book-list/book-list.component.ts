@@ -2,6 +2,9 @@ import { Component, OnInit } from '@angular/core';
 import { Product } from '../../api/product';
 import { ProductService } from '../../service/productservice';
 import { ConfirmationService, MessageService } from 'primeng/api';
+import { Book } from '../../api/Book';
+import { BooksService } from '../../service/service-project/books.service';
+
 @Component({
  
   templateUrl: './book-list.component.html',
@@ -12,31 +15,25 @@ export class BookListComponent implements OnInit {
 
   
   productDialog: boolean;
-
   deleteProductDialog: boolean = false;
-
   deleteProductsDialog: boolean = false;
-
   products: Product[];
-
   product: Product;
-
   selectedProducts: Product[];
-
   submitted: boolean;
-
   cols: any[];
-
   statuses: any[];
-
+  bookList:Book[];
+  book: Book;
   rowsPerPageOptions = [5, 10, 20];
 
   constructor(private productService: ProductService, private messageService: MessageService,
-              private confirmationService: ConfirmationService) {}
+              private confirmationService: ConfirmationService,
+              private booksService:BooksService ,) {}
 
-  ngOnInit() {
+    async ngOnInit(): Promise<void> {
       this.productService.getProducts().then(data => this.products = data);
-
+      this.bookList=await this.getBook();
       this.cols = [
           {field: 'name', header: 'Name'},
           {field: 'price', header: 'Price'},
@@ -135,5 +132,14 @@ export class BookListComponent implements OnInit {
           id += chars.charAt(Math.floor(Math.random() * chars.length));
       }
       return id;
+  }
+
+  async getBook(){
+    let respuesta:Book[];
+    await this.booksService.getAllBooks().toPromise().then((response) => {
+      respuesta = response;
+    }).catch(e => console.error(e));
+    console.log(respuesta)
+    return respuesta;
   }
 }
