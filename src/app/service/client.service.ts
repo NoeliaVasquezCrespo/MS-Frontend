@@ -3,6 +3,7 @@ import {Observable} from "rxjs";
 import {Address} from "../api/Address";
 import {HttpClient} from "@angular/common/http";
 import {Client} from "../api/Client";
+import {ClientDetails} from "../api/ClientDetails";
 
 @Injectable({
   providedIn: 'root'
@@ -21,5 +22,9 @@ export class ClientService {
         console.log(client);
         const url = `${this.baseUrl}client`;
         return this.http.post<Client>(url,client);
+    }
+    getClients():Observable<ClientDetails[]>{
+        const url = `${this.baseUrl}client/details`;
+        return this.http.get<ClientDetails[]>(url);
     }
 }

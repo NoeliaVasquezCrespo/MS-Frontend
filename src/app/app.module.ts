@@ -144,6 +144,7 @@ import { InfoFormsComponent } from './components/info-forms/info-forms.component
 import { LoansComponent } from './components/loans/loans.component';
 import { BookListComponent } from './components/book-list/book-list.component';
 import { ClientFormsComponent } from './components/client-forms/client-forms.component';
+import { ClientListComponent} from "./components/client-list/client-list.component";
 import { MaterialModule } from './material.module';
 
 @NgModule({
@@ -283,7 +284,8 @@ import { MaterialModule } from './material.module';
         InfoFormsComponent,
         LoansComponent,
         BookListComponent,
-        ClientFormsComponent
+        ClientFormsComponent,
+        ClientListComponent
     ],
     providers: [
         {provide: LocationStrategy, useClass: HashLocationStrategy},
