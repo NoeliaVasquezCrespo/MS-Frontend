@@ -2,7 +2,7 @@ import { Component, OnInit,ViewChild } from '@angular/core';
 import { CountryService } from '../../service/countryservice';
 import { NodeService } from '../../service/nodeservice';
 import { SelectItem } from 'primeng/api';
-import { LoansService } from '../../service/loans.service';
+import { LoansService } from '../../service/service-project/loans.service';
 import {MatTableDataSource} from '@angular/material/table';
 import {MatSort, Sort} from '@angular/material/sort';
 import {MatPaginator} from '@angular/material/paginator';
@@ -12,6 +12,9 @@ import { LoanDetailsService } from '../../service/loansdetails.service';
 import { Loan } from '../../api/Loan';
 import { LoanDetails } from '../../api/LoanDetails';
 import { Book } from '../../api/Book';
+
+import { Product } from '../../api/product';
+import { ProductService } from '../../service/productservice';
 
 @Component({
   selector: 'app-info-forms',
@@ -69,6 +72,15 @@ export class LoansComponent implements OnInit {
     dataSource = new MatTableDataSource();
     fechaAct = new Date();
 
+    products: Product[];
+    product: Product
+    cols: any[];
+    statuses: any[];
+    rowsPerPageOptions = [5, 10, 20];
+    selectedProducts: Product[];
+    deleteProductsDialog: boolean = false;
+
+    
     @ViewChild(MatPaginator) paginatorProducts!: MatPaginator;
     dataSourceProducts!: MatTableDataSource<Book>;
 
@@ -103,7 +115,7 @@ export class LoansComponent implements OnInit {
     valueKnob = 20;
     selectedDate:any;
 
-    constructor(private loansService:LoansService , private fb:FormBuilder, private _liveAnnouncer: LiveAnnouncer,
+    constructor(private productService: ProductService, private loansService:LoansService , private fb:FormBuilder, private _liveAnnouncer: LiveAnnouncer,
         private countryService: CountryService, private nodeService: NodeService) {
         this.datosPrestamo=this.fb.group({
             clientId: new FormControl('', Validators.required),
@@ -114,6 +126,22 @@ export class LoansComponent implements OnInit {
     async ngOnInit() :Promise<void>{
         this.books = [];
         this.dataSource.data = this.books;
+
+        this.productService.getProducts().then(data => this.products = data);
+
+        this.cols = [
+            {field: 'name', header: 'Name'},
+            {field: 'price', header: 'Price'},
+            {field: 'category', header: 'Category'},
+            {field: 'rating', header: 'Reviews'},
+            {field: 'inventoryStatus', header: 'Status'}
+        ];
+
+        this.statuses = [
+            {label: 'INSTOCK', value: 'instock'},
+            {label: 'LOWSTOCK', value: 'lowstock'},
+            {label: 'OUTOFSTOCK', value: 'outofstock'}
+        ];
     }
     ngAfterViewInit(){
         this.dataSource.paginator= this.paginator;
@@ -128,6 +156,12 @@ export class LoansComponent implements OnInit {
         }
       }
 
+    confirmDeleteSelected(){
+        this.deleteProductsDialog = false;
+        this.products = this.products.filter(val => !this.selectedProducts.includes(val));
+        //this.messageService.add({severity: 'success', summary: 'Successful', detail: 'Products Deleted', life: 3000});
+        this.selectedProducts = null;
+    }
     async getAdminData(){
         /*let respuesta;
         console.log("PRIMER METODO");
@@ -139,7 +173,7 @@ export class LoansComponent implements OnInit {
     }
     
     
-
+  
     addLoan(){
         let addLoans:Loan={
             clientId: this.datosPrestamo.value.clientId,
