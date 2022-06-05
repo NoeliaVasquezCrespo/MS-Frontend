@@ -10,6 +10,7 @@ import {ClientDetails} from "../api/ClientDetails";
 })
 export class ClientService {
     private baseUrl:string = 'http://localhost:8743/v1/api/';
+    private baseUrlLoan:string = 'http://localhost:8990/v1/api/loans/';
     constructor(private http:HttpClient) {
 
     }
@@ -56,7 +57,7 @@ export class ClientService {
         return this.http.delete<boolean>(url);
     }
     getClients():Observable<ClientDetails[]>{
-        const url = `${this.baseUrl}client/details`;
+        const url = `${this.baseUrlLoan}clients`;
         return this.http.get<ClientDetails[]>(url);
     }
     getClientById(id:number){
