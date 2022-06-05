@@ -8,11 +8,13 @@ import { Book } from '../../api/Book';
 })
 export class BooksService {
 
-  private baseUrl:string = 'http://localhost:7000/v1/api/';
+  private baseUrl:string = 'http://localhost:7878/v1/api/';
+  private baseUrlLoan: string = 'http://localhost:8990/v1/api/';
   constructor(private http:HttpClient){ }
 
   getAllActiveBooks():Observable<Book[]>{
-      const url = `${this.baseUrl}books/list/1`;
+      const url = `${this.baseUrlLoan}books`;
+      console.log("Invocación de ms-loan a ms-book")
       return this.http.get<Book[]>(url).pipe(
         map(
           response => response, error => error));
