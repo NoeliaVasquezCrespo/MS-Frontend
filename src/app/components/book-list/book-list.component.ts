@@ -1,14 +1,12 @@
 import { Component, OnInit } from '@angular/core';
-import { Product } from '../../api/product';
-import { ProductService } from '../../service/productservice';
-import { ConfirmationService, MessageService } from 'primeng/api';
 import { Book } from '../../api/Book';
 import { BooksService } from '../../service/service-project/books.service';
+import Swal from 'sweetalert2';
+import { Router } from '@angular/router';
 
 @Component({
  
   templateUrl: './book-list.component.html',
-  providers: [MessageService, ConfirmationService],
   styleUrls: ['../../../assets/demo/badges.scss']
 })
 export class BookListComponent implements OnInit {
@@ -17,9 +15,9 @@ export class BookListComponent implements OnInit {
   productDialog: boolean;
   deleteProductDialog: boolean = false;
   deleteProductsDialog: boolean = false;
-  products: Product[];
-  product: Product;
-  selectedProducts: Product[];
+  
+  
+  selectedProducts: Book[];
   submitted: boolean;
   cols: any[];
   statuses: any[];
@@ -27,112 +25,81 @@ export class BookListComponent implements OnInit {
   book: Book;
   rowsPerPageOptions = [5, 10, 20];
 
-  constructor(private productService: ProductService, private messageService: MessageService,
-              private confirmationService: ConfirmationService,
-              private booksService:BooksService ,) {}
+  constructor(
+              private booksService:BooksService ,
+              private router : Router) {}
 
     async ngOnInit(): Promise<void> {
-      this.productService.getProducts().then(data => this.products = data);
+      
       this.bookList=await this.getBook();
       this.cols = [
-          {field: 'titulo', header: 'Titulo'},
-          {field: 'paginas', header: 'Paginas'},
-          {field: 'idioma', header: 'Idioma'},
-          {field: 'descripcion', header: 'Descripcion'},
-          {field: 'idAutor', header: 'ID Autor'}
+          {field: 'bookId', header: 'bookId'},
+          {field: 'title', header: 'title'},
+          {field: 'pages', header: 'pages'},
+          {field: 'language', header: 'language'},
+          {field: 'description', header: 'description'},
+          {field: 'authorId', header: 'authorId'}
       ];
 
-      this.statuses = [
-          {label: 'INSTOCK', value: 'instock'},
-          {label: 'OUTOFSTOCK', value: 'outofstock'}
-      ];
-  }
-
-  openNew() {
-      this.product = {};
-      this.submitted = false;
-      this.productDialog = true;
   }
 
   deleteSelectedProducts() {
       this.deleteProductsDialog = true;
   }
 
-  editProduct(product: Product) {
+ /* editProduct(product: Product) {
       this.product = {...product};
       this.productDialog = true;
+  }*/
+
+  async deleteBook(id:number){
+    Swal.fire({
+      icon: 'info',
+      title: '¿Desea eliminar de la lista de libros disponibles?',
+      showConfirmButton: true,
+      showCancelButton:true,
+      confirmButtonText: 'Aceptar',
+      cancelButtonText: 'Cancelar',
+    }).then(async(result) => {
+      if (result.value) {
+        console.log('Agregando libro como no disponible')
+        console.log(`Id del libro: ${id}`)
+        
+          await this.deleteBookById(id);
+          console.log("Se modificó el estado del libro correctamente")
+          await this.successNotificationInactiveBookCorrectly();
+        
+      }
+    })
   }
 
-  deleteProduct(product: Product) {
-      this.deleteProductDialog = true;
-      this.product = {...product};
+  async successNotificationInactiveBookCorrectly(){
+    let self = this
+    Swal.fire({
+      icon: 'success',
+      title: 'Libro eliminado de la lista correctamente',
+      showConfirmButton: true,
+      confirmButtonText: 'Aceptar',
+    }).then(async (result) => {
+      if (result.value) {
+        console.log('Volviendo a lista de libros disponibles')
+        await self.router.navigateByUrl('/uikit/bookInactiveList');
+      }
+    })
   }
 
-  confirmDeleteSelected(){
-      this.deleteProductsDialog = false;
-      this.products = this.products.filter(val => !this.selectedProducts.includes(val));
-      this.messageService.add({severity: 'success', summary: 'Successful', detail: 'Products Deleted', life: 3000});
-      this.selectedProducts = null;
+  async deleteBookById(id:number){
+    this.booksService.deleteActiveBook(id).toPromise().then((response) => {
+    }).catch(e => console.error(e));
   }
 
-  confirmDelete(){
-      this.deleteProductDialog = false;
-      this.products = this.products.filter(val => val.id !== this.product.id);
-      this.messageService.add({severity: 'success', summary: 'Successful', detail: 'Product Deleted', life: 3000});
-      this.product = {};
-  }
+  
 
   hideDialog() {
       this.productDialog = false;
       this.submitted = false;
   }
-
-  saveProduct() {
-      this.submitted = true;
-
-      if (this.product.name.trim()) {
-          if (this.product.id) {
-              // @ts-ignore
-              this.product.inventoryStatus = this.product.inventoryStatus.value ? this.product.inventoryStatus.value: this.product.inventoryStatus;
-              this.products[this.findIndexById(this.product.id)] = this.product;
-              this.messageService.add({severity: 'success', summary: 'Successful', detail: 'Product Updated', life: 3000});
-          } else {
-              this.product.id = this.createId();
-              this.product.code = this.createId();
-              this.product.image = 'product-placeholder.svg';
-              // @ts-ignore
-              this.product.inventoryStatus = this.product.inventoryStatus ? this.product.inventoryStatus.value : 'INSTOCK';
-              this.products.push(this.product);
-              this.messageService.add({severity: 'success', summary: 'Successful', detail: 'Product Created', life: 3000});
-          }
-
-          this.products = [...this.products];
-          this.productDialog = false;
-          this.product = {};
-      }
-  }
-
-  findIndexById(id: string): number {
-      let index = -1;
-      for (let i = 0; i < this.products.length; i++) {
-          if (this.products[i].id === id) {
-              index = i;
-              break;
-          }
-      }
-
-      return index;
-  }
-
-  createId(): string {
-      let id = '';
-      const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
-      for (let i = 0; i < 5; i++) {
-          id += chars.charAt(Math.floor(Math.random() * chars.length));
-      }
-      return id;
-  }
-
+  
   async getBook(){
     let respuesta:Book[];
     await this.booksService.getAllActiveBooks().toPromise().then((response) => {

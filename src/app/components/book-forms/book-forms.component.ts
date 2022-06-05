@@ -2,6 +2,15 @@ import { Component, OnInit } from '@angular/core';
 import { CountryService } from '../../service/countryservice';
 import { NodeService } from '../../service/nodeservice';
 import { SelectItem } from 'primeng/api';
+import { Author } from '../../api/Author';
+import { Category } from '../../api/Category';
+import { Editorial } from '../../api/Editorial';
+import { BooksService } from '../../service/service-project/books.service';
+import { AuthorsService } from '../../service/service-project/authors.service';
+import { CategoriesService } from '../../service/service-project/categories.service';
+import { EditorialService } from '../../service/service-project/editorial.service';
+import Swal from 'sweetalert2';
+import { Router } from '@angular/router';
 
 @Component({
   
@@ -11,51 +20,39 @@ import { SelectItem } from 'primeng/api';
 export class BookFormsComponent implements OnInit {
 
   countries: any[];
-
   filteredCountries: any[];
-
   selectedCountryAdvanced: any[];
-
   valSlider = 50;
-
   valColor = '#424242';
-
   valRadio: string;
-
   valCheck: string[] = [];
-
   valSwitch: boolean;
-
   cities: SelectItem[];
-
   selectedList: SelectItem;
-
+  selectedAuthor: SelectItem;
+  selectedEditorial: SelectItem;
   selectedDrop: SelectItem;
-
   selectedMulti: string[] = [];
-
   treeSelectNodes: any[];
-
   selectedNode: SelectItem;
-
   valToggle = false;
-
   paymentOptions: any[];
-
   valSelect1: string;
-
   valSelect2: string;
-
   valueKnob = 20;
-
   selectedDate:any;
 
-  constructor(private countryService: CountryService, private nodeService: NodeService) {}
+  authorsList:Author[];
 
-  ngOnInit() {
-      this.countryService.getCountries().then(countries => {
-          this.countries = countries;
-      });
+  constructor(private countryService: CountryService, 
+              private nodeService: NodeService,
+              private booksService:BooksService,
+              private authorsService:AuthorsService,
+              private editorialService:EditorialService,
+              private categoriesService:CategoriesService) {}
+
+    async ngOnInit(): Promise<void> {
+        this.authorsList=await this.getAuthors();
 
       this.cities = [
           {label: 'New York', value: {id: 1, name: 'New York', code: 'NY'}},
@@ -65,13 +62,16 @@ export class BookFormsComponent implements OnInit {
           {label: 'Paris', value: {id: 5, name: 'Paris', code: 'PRS'}}
       ];
 
-      this.paymentOptions = [
-          {name: 'Option 1', value: 1},
-          {name: 'Option 2', value: 2},
-          {name: 'Option 3', value: 3}
-      ];
+  }
 
-      this.nodeService.getFiles().then(files => this.treeSelectNodes = files)
+  async getAuthors(){
+    let respuesta:Author[];
+    
+    await this.authorsService.getListAuthors().toPromise().then((response) => {
+      respuesta = response;
+    }).catch(e => console.error(e));
+    console.log(respuesta);
+    return respuesta;
   }
 
   filterCountry(event) {
@@ -89,9 +89,5 @@ export class BookFormsComponent implements OnInit {
 
   selectedState:any;
     
-    dropdownItems = [
-        { name: 'Option 1', code: 'Option 1' },
-        { name: 'Option 2', code: 'Option 2' },
-        { name: 'Option 3', code: 'Option 3' }
-    ];
+
 }
