@@ -8,7 +8,7 @@ import { Book } from '../../api/Book';
 })
 export class BooksService {
 
-  private baseUrl:string = 'http://localhost:7878/v1/api/';
+  private baseUrl:string = 'http://localhost:7000/v1/api/';
   constructor(private http:HttpClient){ }
 
   getAllActiveBooks():Observable<Book[]>{
@@ -67,5 +67,5 @@ export class BooksService {
           response => response));
   }
 
-  
+
 }
