@@ -33,8 +33,10 @@ import { BookFormsComponent } from './components/book-forms/book-forms.component
 import { BookListComponent } from './components/book-list/book-list.component';
 import { InfoFormsComponent } from './components/info-forms/info-forms.component';
 import { LoansComponent } from './components/loans/loans.component';
-import { BookInactiveListComponent } from './components/book-inactive-list/book-inactive-list.component';
 
+import {ClientFormsComponent} from "./components/client-forms/client-forms.component";
+import {ClientListComponent} from "./components/client-list/client-list.component";
+import { BookInactiveListComponent } from './components/book-inactive-list/book-inactive-list.component';
 @NgModule({
     imports: [
         RouterModule.forRoot([
@@ -42,6 +44,8 @@ import { BookInactiveListComponent } from './components/book-inactive-list/book-
                 path: '', component: AppMainComponent,
                 children: [
                     {path: '', component: DashboardComponent},
+                    {path: 'uikit/clientForm', component: ClientFormsComponent},
+                    {path: 'uikit/clientList', component: ClientListComponent},
                     {path: 'uikit/bookForm', component: BookFormsComponent},
                     {path: 'uikit/infoForm', component: InfoFormsComponent},
                     {path: 'uikit/bookList', component: BookListComponent},

@@ -88,7 +88,7 @@ import { TreeSelectModule } from 'primeng/treeselect';
 import { TreeTableModule } from 'primeng/treetable';
 import { VirtualScrollerModule } from 'primeng/virtualscroller';
 import { BlockViewer } from './components/blockviewer/blockviewer.component';
- 
+
 import { AppCodeModule } from './components/app-code/app.code.component';
 import { AppComponent } from './app.component';
 import { AppMainComponent } from './app.main.component';
@@ -143,6 +143,8 @@ import { BookFormsComponent } from './components/book-forms/book-forms.component
 import { InfoFormsComponent } from './components/info-forms/info-forms.component';
 import { LoansComponent } from './components/loans/loans.component';
 import { BookListComponent } from './components/book-list/book-list.component';
+import { ClientFormsComponent } from './components/client-forms/client-forms.component';
+import { ClientListComponent} from "./components/client-list/client-list.component";
 import { MaterialModule } from './material.module';
 import { BookInactiveListComponent } from './components/book-inactive-list/book-inactive-list.component';
 
@@ -283,6 +285,8 @@ import { BookInactiveListComponent } from './components/book-inactive-list/book-
         InfoFormsComponent,
         LoansComponent,
         BookListComponent,
+        ClientFormsComponent,
+        ClientListComponent,
         BookInactiveListComponent
     ],
     providers: [

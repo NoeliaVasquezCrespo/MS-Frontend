@@ -92,7 +92,6 @@ export class CrudComponent implements OnInit {
 
     saveProduct() {
         this.submitted = true;
-
         if (this.product.name.trim()) {
             if (this.product.id) {
                 // @ts-ignore

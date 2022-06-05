@@ -25,8 +25,7 @@ export class BookListComponent implements OnInit {
   book: Book;
   rowsPerPageOptions = [5, 10, 20];
 
-  constructor(
-              private booksService:BooksService ,
+  constructor(private booksService:BooksService,
               private router : Router) {}
 
     async ngOnInit(): Promise<void> {

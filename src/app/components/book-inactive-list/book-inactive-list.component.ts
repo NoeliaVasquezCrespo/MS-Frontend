@@ -5,14 +5,14 @@ import Swal from 'sweetalert2';
 import { Book } from '../../api/Book';
 import { BooksService } from '../../service/service-project/books.service';
 @Component({
-  
+
   templateUrl: './book-inactive-list.component.html',
   providers: [MessageService, ConfirmationService],
   styleUrls: ['../../../assets/demo/badges.scss']
 })
 export class BookInactiveListComponent implements OnInit {
 
-  
+
   productDialog: boolean;
   deleteProductDialog: boolean = false;
   deleteProductsDialog: boolean = false;
@@ -28,7 +28,7 @@ export class BookInactiveListComponent implements OnInit {
   constructor(private booksService:BooksService,private router : Router) {}
 
     async ngOnInit(): Promise<void> {
-      
+
       this.bookList=await this.getBook();
       this.cols = [
         {field: 'bookId', header: 'bookId'},
@@ -40,7 +40,7 @@ export class BookInactiveListComponent implements OnInit {
       ];
 
   }
-  
+
   async getBook(){
     let respuesta:Book[];
     await this.booksService.getAllInactiveBooks().toPromise().then((response) => {
@@ -62,11 +62,11 @@ export class BookInactiveListComponent implements OnInit {
       if (result.value) {
         console.log('Agregando libro')
         console.log(`Id del libro: ${id}`)
-        
+
           await this.activeBookById(id);
           console.log("Se modificó el estado correctamente")
           await this.successNotificationActiveBookCorrectly();
-        
+
       }
     })
   }
@@ -91,4 +91,4 @@ export class BookInactiveListComponent implements OnInit {
     }).catch(e => console.error(e));
   }
 
-}  
+}
