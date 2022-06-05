@@ -31,17 +31,14 @@ export class BookInactiveListComponent implements OnInit {
 
       this.bookList=await this.getBook();
       this.cols = [
-          {field: 'titulo', header: 'Titulo'},
-          {field: 'paginas', header: 'Paginas'},
-          {field: 'idioma', header: 'Idioma'},
-          {field: 'descripcion', header: 'Descripcion'},
-          {field: 'idAutor', header: 'ID Autor'}
+        {field: 'bookId', header: 'bookId'},
+        {field: 'title', header: 'title'},
+        {field: 'pages', header: 'pages'},
+        {field: 'language', header: 'language'},
+        {field: 'description', header: 'description'},
+        {field: 'authorId', header: 'authorId'}
       ];
 
-      this.statuses = [
-          {label: 'INSTOCK', value: 'instock'},
-          {label: 'OUTOFSTOCK', value: 'outofstock'}
-      ];
   }
 
   async getBook(){

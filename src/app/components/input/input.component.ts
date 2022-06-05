@@ -110,6 +110,7 @@ export class InputComponent implements OnInit{
             {name: 'Option 3', value: 3}
         ];
 
+        
         this.nodeService.getFiles().then(files => this.treeSelectNodes = files)
     }
 

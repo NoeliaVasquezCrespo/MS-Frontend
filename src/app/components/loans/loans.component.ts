@@ -1,20 +1,18 @@
-import { Component, OnInit,ViewChild } from '@angular/core';
-import { CountryService } from '../../service/countryservice';
-import { NodeService } from '../../service/nodeservice';
-import { SelectItem } from 'primeng/api';
+import { Component, OnInit } from '@angular/core';
 import { LoansService } from '../../service/service-project/loans.service';
 import {MatTableDataSource} from '@angular/material/table';
-import {MatSort, Sort} from '@angular/material/sort';
-import {MatPaginator} from '@angular/material/paginator';
-import {LiveAnnouncer} from '@angular/cdk/a11y';
 import {FormGroup, FormControl, Validators, FormBuilder} from '@angular/forms';
 import { LoanDetailsService } from '../../service/loansdetails.service';
+import { ClientService } from '../../service/client.service';
 import { Loan } from '../../api/Loan';
 import { LoanDetails } from '../../api/LoanDetails';
 import { Book } from '../../api/Book';
-
+import { BooksService } from '../../service/service-project/books.service';
+import Swal from'sweetalert2';
 import { Product } from '../../api/product';
+import { ClientDetails } from '../../api/ClientDetails';
 import { ProductService } from '../../service/productservice';
+import {SelectItem} from "primeng/api";
 
 @Component({
   selector: 'app-info-forms',
@@ -66,113 +64,113 @@ export class LoansComponent implements OnInit {
     prestamo: Loan;
     datosPrestamo: FormGroup;
     detallePrestamo: LoanDetails;
-    detallePrestamo2: LoanDetails;
-    detallePrestamo3: LoanDetails;
-
-    dataSource = new MatTableDataSource();
     fechaAct = new Date();
-
-    products: Product[];
-    product: Product
-    cols: any[];
-    statuses: any[];
-    rowsPerPageOptions = [5, 10, 20];
-    selectedProducts: Product[];
-    deleteProductsDialog: boolean = false;
-
-    
-    @ViewChild(MatPaginator) paginatorProducts!: MatPaginator;
-    dataSourceProducts!: MatTableDataSource<Book>;
-
-    @ViewChild(MatPaginator, {static:true}) paginator: MatPaginator;
-    @ViewChild(MatSort) sort: MatSort;
-
-
-    applyFilter(event: Event) {
-        const filterValue = (event.target as HTMLInputElement).value;
-        this.dataSource.filter = filterValue.trim().toLowerCase();
-    }
     books:Book[] = [];
-    displayedColumns: string[] = ['id', 'nombre', 'apellido', 'correo', 'edad','opciones'];
-    countries: any[];
-    filteredCountries: any[];
-    selectedCountryAdvanced: any[];
-    valSlider = 50;
-    valColor = '#424242';
-    valRadio: string;
-    valCheck: string[] = [];
-    valSwitch: boolean;
-    cities: SelectItem[];
-    selectedList: SelectItem;
-    selectedDrop: SelectItem;
-    selectedMulti: string[] = [];
-    treeSelectNodes: any[];
-    selectedNode: SelectItem;
-    valToggle = false;
-    paymentOptions: any[];
-    valSelect1: string;
-    valSelect2: string;
-    valueKnob = 20;
-    selectedDate:any;
+    dataSource = new MatTableDataSource();
+    cols: any[];
+    countries: [];
+    clientsList: ClientDetails[];
+    product: Product
+   
+    rowsPerPageOptions = [5, 10, 20];
+    selectedBooks: Book[];
 
-    constructor(private productService: ProductService, private loansService:LoansService , private fb:FormBuilder, private _liveAnnouncer: LiveAnnouncer,
-        private countryService: CountryService, private nodeService: NodeService) {
+    clients:SelectItem[] = [];
+
+    selectedDrop: SelectItem;
+
+    filteredClients: ClientDetails[];
+  
+    
+    constructor(private loansService:LoansService , private fb:FormBuilder, 
+        private booksService:BooksService, private loanDetailsService:LoanDetailsService, 
+        private clientService: ClientService ) {
+
         this.datosPrestamo=this.fb.group({
             clientId: new FormControl('', Validators.required),
             returnDate: new FormControl('', Validators.required)
-          })
+        })
     }
 
     async ngOnInit() :Promise<void>{
-        this.books = [];
-        this.dataSource.data = this.books;
-
-        this.productService.getProducts().then(data => this.products = data);
-
+        this.countries = [];
         this.cols = [
-            {field: 'name', header: 'Name'},
-            {field: 'price', header: 'Price'},
-            {field: 'category', header: 'Category'},
-            {field: 'rating', header: 'Reviews'},
-            {field: 'inventoryStatus', header: 'Status'}
+            {field: 'id', header: 'ID'},
+            {field: 'title', header: 'Titulo'},
+            {field: 'pages', header: 'Páginas'},
+            {field: 'stock', header: 'Stock'}
         ];
+        
 
-        this.statuses = [
-            {label: 'INSTOCK', value: 'instock'},
-            {label: 'LOWSTOCK', value: 'lowstock'},
-            {label: 'OUTOFSTOCK', value: 'outofstock'}
-        ];
-    }
-    ngAfterViewInit(){
-        this.dataSource.paginator= this.paginator;
-        this.dataSource.sort = this.sort;
-      }
-    
-      announceSortChange(sortState: Sort) {
-        if (sortState.direction) {
-          this._liveAnnouncer.announce(`Sorted ${sortState.direction}ending`);
-        } else {
-          this._liveAnnouncer.announce('Sorting cleared');
+        this.dataSource.data = this.books;
+        await this.booksService.getAllActiveBooks().toPromise().then((response) => {
+            this.books = response;
+          }).catch(e => console.error(e));
+          console.log(this.books)
+
+        await this.clientService.getClients().toPromise().then((response) => {
+            this.clientsList = response;
+          }).catch(e => console.error(e));
+          console.log(this.clientsList);
+        
+          for(let i=0;i<this.clientsList.length;i++){
+            this.clients.push(
+                {label: this.clientsList[i].name+' '+this.clientsList[i].lastname, value: this.clientsList[i].clientId}
+            );
         }
-      }
+        console.log(this.clientsList)
 
-    confirmDeleteSelected(){
-        this.deleteProductsDialog = false;
-        this.products = this.products.filter(val => !this.selectedProducts.includes(val));
-        //this.messageService.add({severity: 'success', summary: 'Successful', detail: 'Products Deleted', life: 3000});
-        this.selectedProducts = null;
     }
-    async getAdminData(){
-        /*let respuesta;
-        console.log("PRIMER METODO");
-        await this.adminlistService. getListProvider().toPromise().then((response) => {
-          respuesta = response;
-        }).catch(e => console.error(e));
-    
-        return respuesta;*/
+
+    filterClients(event) {
+        const filtered: ClientDetails[] = [];
+        const query = event.query;
+        for (let i = 0; i < this.clientsList.length; i++) {
+            const client = this.clientsList[i];
+            if (client.name.toLowerCase().indexOf(query.toLowerCase()) == 0) {
+                filtered.push(client);
+            }
+        }
+
+        this.filteredClients = filtered;
     }
     
-    
+    async addLoansDetails(loanid:number){
+        console.log(this.selectedBooks);
+        this.selectedBooks.forEach(async b => {
+            console.log("Libro Id");
+            console.log(b.bookId);
+            let bookLoans:LoanDetails={
+                bookId: b.bookId,
+                loanId: loanid,
+                loanStatus: "prestado",
+                status: 1
+            }
+            await this.addLoanDetalils(bookLoans);
+            await this.updateStockBook(b.bookId);
+        })
+        this.selectedBooks = null;
+    }
+
+    async updateStockBook(id:number){
+        this.booksService.updateStockBook(id).subscribe(
+            async resp => {
+              console.log("Stock Libro Actualizado");
+              console.log(resp.stock);
+            }, error => {
+              console.log("error");
+           });
+    }
+
+    async addLoanDetalils(loanDetails:LoanDetails){
+        this.loanDetailsService.addLoanDetails(loanDetails).subscribe(
+            async resp => {
+              console.log("Prestamo de un Libro Registrado");
+              console.log(resp);
+            }, error => {
+              console.log("error");
+           });
+    }  
   
     addLoan(){
         let addLoans:Loan={
@@ -182,12 +180,29 @@ export class LoansComponent implements OnInit {
             status: 1
         }
        console.log(this.datosPrestamo.value.returnDate);
+       
         this.loansService.addLoan(addLoans).subscribe(
-            resp => {
-              console.log("Prestamo Registrado");
-              console.log(resp);
+            async resp => {
+                console.log("Prestamo Registrado");
+                console.log(resp);
+                await this.addLoansDetails(resp.loanId);
+                this.successNotification();
             }, error => {
               console.log("error");
            });
     }
+
+    successNotification(){
+        Swal.fire({
+          title: 'Prestamo Registrado',
+          text: 'Se registro el prestamo de los libros correctamente',
+          icon: 'success',
+          showCancelButton: false,
+          confirmButtonText: 'Ok',
+        }).then(async (result) => {
+          if (result.value) {
+            location.reload();
+          }
+        })
+      }
 }

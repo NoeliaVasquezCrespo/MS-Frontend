@@ -4,43 +4,44 @@
 			<h5>Agregar Prestamo</h5>
             <p>Ingrese los datos correspondientes para agregar un nuevo prestamo: </p>
             <div class="field">
-                <form [formGroup]="datosPrestamo">
+                <form [formGroup]="datosPrestamo">                
                     <h5>Usuario</h5>
-                    <p-inputNumber formControlName="clientId" from placeholder="userId" mode="decimal" [showButtons]="true" [min]="0" [max]="100">
-                    </p-inputNumber>
-                    
+                    <p-dropdown formControlName="clientId" [options]="clients" [(ngModel)]="selectedDrop" placeholder="Seleccione una direccion" [showClear]="true"></p-dropdown>
+			     
                     <h5>Fecha de Retorno</h5>
-                    <p-calendar formControlName="returnDate" placeholder="Fecha De Retorno" [showIcon]="true" [showButtonBar]="true" [(ngModel)]="selectedDate"></p-calendar>
+                    <p-calendar formControlName="returnDate" placeholder="Fecha De Retorno" [showIcon]="true" [showButtonBar]="true"></p-calendar>
                     
                     <h5>Listado de Libros</h5>
 
-                    <p-table [value]="products" [paginator]="true" [rows]="5" responsiveLayout="scroll" [globalFilterFields]="['name','country.name','representative.name','status']" [paginator]="true"  [showCurrentPageReport]="true" currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries" [(selection)]="selectedProducts" selectionMode="multiple" [rowHover]="true" dataKey="id">
+                    <p-table #dt [value]="books" [columns]="cols" [paginator]="true" [rows]="5" responsiveLayout="scroll" [globalFilterFields]="['title','pages','stock']" [paginator]="true"  [showCurrentPageReport]="true" currentPageReportTemplate="Viendo listado {first} al {last}, de {totalRecords} Libros" [(selection)]="selectedBooks" dataKey="bookId">
                       <ng-template pTemplate="caption">
                         <div class="flex flex-column md:flex-row md:justify-content-between md:align-items-center">
-                            <h5 class="m-0">Manage Products</h5>
+                            <h5 class="m-0">Busqueda por titulo</h5>
                             <span class="block mt-2 md:mt-0 p-input-icon-left">
                                 <i class="pi pi-search"></i>
-                                <input pInputText type="text" (input)="dt.filterGlobal($event.target.value, 'contains')" placeholder="Search..." />
+                                <input pInputText type="text" (input)="dt.filterGlobal($event.target.value, 'contains')" placeholder="Buscar" />
                             </span>
                         </div>
                       </ng-template>
                       <ng-template pTemplate="header">
                           <tr>
-                              <th></th>
-                              <th pSortableColumn="name">Título del libro<p-sortIcon field="name"></p-sortIcon></th>
-                              <th pSortableColumn="price"># Páginas <p-sortIcon field="price"></p-sortIcon></th>
-                              <th pSortableColumn="quantity"># Count <p-sortIcon field="quantity"></p-sortIcon></th>
+                            <th style="width: 3rem">
+                                <p-tableHeaderCheckbox></p-tableHeaderCheckbox>
+                            </th>
+                            <th pSortableColumn="id">ID<p-sortIcon field="id"></p-sortIcon></th>
+                            <th pSortableColumn="title">Título<p-sortIcon field="title"></p-sortIcon></th>
+                            <th pSortableColumn="pages"> Páginas <p-sortIcon field="pages"></p-sortIcon></th>
+                            <th pSortableColumn="stock">Stock<p-sortIcon field="stock"></p-sortIcon></th>
                           </tr>
                       </ng-template>
-                      <ng-template pTemplate="body" let-product>
+                      <ng-template pTemplate="body" let-book>
                           <tr>
-                              <td>
-                                <p-tableCheckbox [value]="product"></p-tableCheckbox>
-                              </td>
-                              <td style="width: 35%; min-width: 7rem;">{{product.name}}</td>
-                              <td style="width: 35%; min-width: 8rem;">{{product.price}}</td>
-                              <td style="width: 15%; min-width: 8rem;">{{product.quantity}}</td>
-                        
+                            <td>
+                                <p-tableCheckbox [value]="book"></p-tableCheckbox>
+                            </td>
+                            <td style="width: 35%; min-width: 7rem;">{{book.title}}</td>
+                            <td style="width: 35%; min-width: 8rem;">{{book.pages}}</td>
+                            <td style="width: 15%; min-width: 8rem;">{{book.stock}}</td>
                           </tr>
                       </ng-template>
                   </p-table>

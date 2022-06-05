@@ -2,12 +2,11 @@
     <div class="col-12">
         <div class="card">
 
-            <p-table #dt [value]="bookList" [columns]="cols" responsiveLayout="scroll" [rows]="10" [globalFilterFields]="['title','language','representative.name','status']" [rows]="10" [paginator]="true" [rowsPerPageOptions]="[10,20,30]" [showCurrentPageReport]="true" currentPageReportTemplate="Mostrando {first} a {last} de {totalRecords} registro de libros" [(selection)]="selectedProducts" selectionMode="multiple" [rowHover]="true" dataKey="id">
+            <p-table #dt [value]="bookList" [columns]="cols" responsiveLayout="scroll" [rows]="10" [globalFilterFields]="['title','language','description','pages']" [rows]="10" [paginator]="true" [rowsPerPageOptions]="[10,20,30]" [showCurrentPageReport]="true" currentPageReportTemplate="Mostrando {first} a {last} de {totalRecords} registro de libros" [(selection)]="selectedProducts" selectionMode="multiple" [rowHover]="true" dataKey="bookId">
                 <ng-template pTemplate="caption">
                     <div class="flex flex-column md:flex-row md:justify-content-between md:align-items-center">
                         <h5 class="m-0">Libros disponibles</h5>
-                        <button pButton pRipple label="Eliminar listado" icon="pi pi-trash" class="p-button-text p-button-danger" (click)="deleteSelectedProducts()" [disabled]="!selectedProducts || !selectedProducts.length"></button>
-                   
+                        <button pButton pRipple label="Agregar Libro" icon="pi pi-book" class="p-button-outlined p-button-success" routerLink="/uikit/bookForm"></button>
                         <span class="block mt-2 md:mt-0 p-input-icon-left">
                             <i class="pi pi-search"></i>
                             
@@ -17,24 +16,18 @@
                 </ng-template>
                 <ng-template pTemplate="header">
                     <tr>
-                        <th style="width: 3rem">
-                            <p-tableHeaderCheckbox></p-tableHeaderCheckbox>
-                        </th>
-                        <th pSortableColumn="id">ID <p-sortIcon field="id"></p-sortIcon></th>
-                        <th pSortableColumn="titulo">Título <p-sortIcon field="titulo"></p-sortIcon></th>
+                        <th pSortableColumn="bookId">ID <p-sortIcon field="bookId"></p-sortIcon></th>
+                        <th pSortableColumn="title">Título <p-sortIcon field="title"></p-sortIcon></th>
                         <th>Portada</th>
-                        <th pSortableColumn="paginas"># Páginas <p-sortIcon field="paginas"></p-sortIcon></th>
-                        <th pSortableColumn="idioma">Idioma <p-sortIcon field="idioma"></p-sortIcon></th>
-                        <th pSortableColumn="descripcion">Descipción <p-sortIcon field="descripcion"></p-sortIcon></th>
-                        <th pSortableColumn="idAutor">ID Autor <p-sortIcon field="idAutor"></p-sortIcon></th>
+                        <th pSortableColumn="pages"># Páginas <p-sortIcon field="pages"></p-sortIcon></th>
+                        <th pSortableColumn="language">Idioma <p-sortIcon field="language"></p-sortIcon></th>
+                        <th pSortableColumn="description">Descripción <p-sortIcon field="description"></p-sortIcon></th>
+                        <th pSortableColumn="authorId">ID Autor <p-sortIcon field="authorId"></p-sortIcon></th>
                         <th></th>
                     </tr>
                 </ng-template>
                 <ng-template pTemplate="body" let-book>
                     <tr>
-                        <td>
-                            <p-tableCheckbox [value]="book"></p-tableCheckbox>
-                        </td>
                         <td style="width:14%; min-width:10rem;">
                             <span class="p-column-title">ID</span>
                             {{book.bookId}}
@@ -66,8 +59,8 @@
                         </td>
                         <td>
                             <div class="flex">
-                                <button pButton pRipple icon="pi pi-pencil" class="p-button-rounded p-button-success mr-2" (click)="editProduct(product)"></button>
-                                <button pButton pRipple icon="pi pi-trash" class="p-button-rounded p-button-warning" (click)="deleteProduct(product)"></button>
+                                <button pButton pRipple icon="pi pi-pencil" class="p-button-rounded p-button-success mr-2" (click)="editBook(book)"></button>
+                                <button pButton pRipple icon="pi pi-trash" class="p-button-rounded p-button-warning" (click)="deleteBook(book?.bookId)"></button>
                             </div>
                         </td>
                     </tr>
@@ -75,90 +68,44 @@
             </p-table>
         </div>
 
-        <p-dialog [(visible)]="productDialog" [style]="{width: '450px'}" header="Editar Información del Libro" [modal]="true" class="p-fluid">
+        <p-dialog [(visible)]="bookDialog" [style]="{width: '450px'}" header="Editar Información del Libro" [modal]="true" class="p-fluid">
             <ng-template pTemplate="content">
-                <img [src]="'assets/demo/images/product/' + product.image" [alt]="product.image" width="150" class="mt-0 mx-auto mb-5 block shadow-2" *ngIf="product.image">
                 <div class="field">
-                    <label for="name">Name</label>
-                    <input type="text" pInputText id="name" [(ngModel)]="product.name" required autofocus [ngClass]="{'ng-invalid ng-dirty' : submitted && !product.name}"/>
-                    <small class="ng-dirty ng-invalid" *ngIf="submitted && !product.name">Name is required.</small>
+                    <label for="title">Titulo</label>
+                    <input type="text" pInputText id="title" [(ngModel)]="book.title" required autofocus [ngClass]="{'ng-invalid ng-dirty' : submitted && !book.title}"/>
+                    <small class="ng-dirty ng-invalid" *ngIf="submitted && !book.title">Title is required.</small>
                 </div>
                 <div class="field">
-                    <label for="description">Description</label>
-                    <textarea id="description" pInputTextarea [(ngModel)]="product.description" required rows="3" cols="20"></textarea>
+                    <label for="name">Idioma</label>
+                    <input type="text" pInputText id="language" [(ngModel)]="book.language" required autofocus [ngClass]="{'ng-invalid ng-dirty' : submitted && !book.language}"/>
+                    <small class="ng-dirty ng-invalid" *ngIf="submitted && !book.language">Language is required.</small>
+                </div>
+                <div class="field">
+                    <label for="name"># Páginas</label>
+                    <input type="number" pInputText id="pages" [(ngModel)]="book.pages" required autofocus [ngClass]="{'ng-invalid ng-dirty' : submitted && !book.pages}"/>
+                    <small class="ng-dirty ng-invalid" *ngIf="submitted && !book.pages">Pages is required.</small>
+                </div>
+                <div class="field">
+                    <label for="name">Descripción</label>
+                    <input type="text" pInputText id="description" [(ngModel)]="book.description" required autofocus [ngClass]="{'ng-invalid ng-dirty' : submitted && !book.description}"/>
+                    <small class="ng-dirty ng-invalid" *ngIf="submitted && !book.description">Description is required.</small>
+                </div>
+                <div class="field">
+                    <label for="name">URL de foto de portada</label>
+                    <input type="text" pInputText id="bookCover" [(ngModel)]="book.bookCover" required autofocus [ngClass]="{'ng-invalid ng-dirty' : submitted && !book.bookCover}"/>
+                    <small class="ng-dirty ng-invalid" *ngIf="submitted && !book.bookCover">Book Cover is required.</small>
+                </div>
+                <div class="field">
+                    <label for="name">Stock</label>
+                    <input type="number" pInputText id="stock" [(ngModel)]="book.stock" required autofocus [ngClass]="{'ng-invalid ng-dirty' : submitted && !book.stock}"/>
+                    <small class="ng-dirty ng-invalid" *ngIf="submitted && !book.stock">Stock is required.</small>
                 </div>
 
-                <div class="field">
-                    <label for="status">Inventory Status</label>
-                    <p-dropdown id="status" [options]="statuses" optionLabel="label" [(ngModel)]="product.inventoryStatus" placeholder="Select a Status">
-                        <ng-template pTemplate="selectedItem">
-                            <span *ngIf="product && product.inventoryStatus" [class]="'product-badge status-' + product.inventoryStatus.value">{{product.inventoryStatus.label}}</span>
-                        </ng-template>
-                        <ng-template let-status pTemplate="status">
-                            <span [class]="'product-badge status-' + status.value.toLowerCase()">{{status.label}}</span>
-                        </ng-template>
-                    </p-dropdown>
-                </div>
-
-                <div class="field">
-                    <label class="mb-3">Category</label>
-                    <div class="formgrid grid">
-                        <div class="field-radiobutton col-6">
-                            <p-radioButton id="category1" name="category" value="Accessories" [(ngModel)]="product.category"></p-radioButton>
-                            <label for="category1">Accessories</label>
-                        </div>
-                        <div class="field-radiobutton col-6">
-                            <p-radioButton id="category2" name="category" value="Clothing" [(ngModel)]="product.category"></p-radioButton>
-                            <label for="category2">Clothing</label>
-                        </div>
-                        <div class="field-radiobutton col-6">
-                            <p-radioButton id="category3" name="category" value="Electronics" [(ngModel)]="product.category"></p-radioButton>
-                            <label for="category3">Electronics</label>
-                        </div>
-                        <div class="field-radiobutton col-6">
-                            <p-radioButton id="category4" name="category" value="Fitness" [(ngModel)]="product.category"></p-radioButton>
-                            <label for="category4">Fitness</label>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="formgrid grid">
-                    <div class="field col">
-                        <label for="price">Price</label>
-                        <p-inputNumber id="price" [(ngModel)]="product.price" mode="currency" currency="USD" locale="en-US"></p-inputNumber>
-                    </div>
-                    <div class="field col">
-                        <label for="quantity">Quantity</label>
-                        <p-inputNumber id="quantity" [(ngModel)]="product.quantity"></p-inputNumber>
-                    </div>
-                </div>
             </ng-template>
 
             <ng-template pTemplate="footer">
-                <button pButton pRipple label="Cancel" icon="pi pi-times" class="p-button-text" (click)="hideDialog()"></button>
-                <button pButton pRipple label="Save" icon="pi pi-check" class="p-button-text" (click)="saveProduct()"></button>
-            </ng-template>
-        </p-dialog>
-
-        <p-dialog [(visible)]="deleteProductDialog" header="Confirmar eliminación" [modal]="true" [style]="{width:'450px'}">
-            <div class="flex align-items-center justify-content-center">
-                <i class="pi pi-exclamation-triangle mr-3" style="font-size: 2rem"></i>
-                <span *ngIf="product">Está seguro de eliminar el libro: <b>{{product.name}}</b>?</span>
-            </div>
-            <ng-template pTemplate="footer">
-                <button pButton pRipple icon="pi pi-times" class="p-button-text" label="No" (click)="deleteProductDialog = false"></button>
-                <button pButton pRipple icon="pi pi-check" class="p-button-text" label="Si" (click)="confirmDelete()"></button>
-            </ng-template>
-        </p-dialog>
-
-        <p-dialog [(visible)]="deleteProductsDialog" header="Confirm" [modal]="true" [style]="{width:'450px'}">
-            <div class="flex align-items-center justify-content-center">
-                <i class="pi pi-exclamation-triangle mr-3" style="font-size: 2rem"></i>
-                <span>Are you sure you want to delete selected products?</span>
-            </div>
-            <ng-template pTemplate="footer">
-                <button pButton pRipple icon="pi pi-times" class="p-button-text" label="No" (click)="deleteProductsDialog = false"></button>
-                <button pButton pRipple icon="pi pi-check" class="p-button-text" label="Yes" (click)="confirmDeleteSelected()"></button>
+                <button pButton pRipple label="Cancelar" icon="pi pi-times" class="p-button-text" (click)="hideDialog()"></button>
+                <button pButton pRipple label="Save" icon="pi pi-check" class="p-button-text" (click)="saveBook()"></button>
             </ng-template>
         </p-dialog>
     </div>

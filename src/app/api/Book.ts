@@ -9,5 +9,5 @@ export interface Book {
     description: string;
     bookCover: string;
     stock: number;
-    status: number;
+    status?: number;
 }

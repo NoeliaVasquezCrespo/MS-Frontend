@@ -7,11 +7,11 @@
                 <div>
                     <span class="p-input-icon-left">
                         <i class="pi pi-user"></i>
-                        <input pInputText type="text" placeholder="Nombre Completo" />
+                        <input pInputText type="text" [(ngModel)]="name" placeholder="Nombre Completo" />
                     </span>
                 </div>
 			</div>
-            <button pButton pRipple type="button" label="Agregar autor" class="p-button-rounded p-button-success mr-2 mb-2"></button>		
+            <button pButton pRipple type="button"  (click)="agregarAutor()" label="Agregar autor" class="p-button-rounded p-button-success mr-2 mb-2"></button>		
 		</div>
 
 		<div class="card p-fluid">
@@ -21,11 +21,11 @@
                 <div>
                     <span class="p-input-icon-left">
                         <i class="pi pi-bookmark-fill"></i>
-                        <input pInputText type="text" placeholder="Categoria" />
+                        <input pInputText type="text" [(ngModel)]="category" placeholder="Categoria" />
                     </span>
                 </div>
 			</div>
-            <button pButton pRipple type="button" label="Agregar categoria" class="p-button-rounded p-button-info mr-2 mb-2"></button>		
+            <button pButton pRipple type="button" (click)="agregarCategoria()"  label="Agregar categoria"   class="p-button-rounded p-button-info mr-2 mb-2"></button>		
 		</div>
 
 		<div class="card">
@@ -35,11 +35,11 @@
                 <div>
                     <span class="p-input-icon-left">
                         <i class="pi pi-box"></i>
-                        <input pInputText type="text" placeholder="Editorial" />
+                        <input pInputText type="text"   [(ngModel)]="editorial" placeholder="Editorial" />
                     </span>
                 </div>
 			</div>
-            <button pButton pRipple type="button" label="Agregar editorial" class="p-button-rounded p-button-help mr-2 mb-2"></button>		
+            <button pButton pRipple type="button" (click)="agregarEditorial()" label="Agregar editorial" class="p-button-rounded p-button-help mr-2 mb-2"></button>		
 		</div>
 	</div>
     <div class="col-12 md:col-6">
@@ -48,3 +48,127 @@
         </div> 
 	</div>
 </div>
+
+
+
+<div class="grid">
+    <div class="col-12">
+        <div class="card">
+            <p-table #dt [value]="authorList" [columns]="cols" responsiveLayout="scroll" [rows]="10" [globalFilterFields]="['name']" [rows]="10" [paginator]="true" [rowsPerPageOptions]="[10,20,30]" [showCurrentPageReport]="true" currentPageReportTemplate="Mostrando {first} a {last} de {totalRecords} registro de autores" selectionMode="multiple" [rowHover]="true" dataKey="authorId">
+                <ng-template pTemplate="caption">
+                    <div class="flex flex-column md:flex-row md:justify-content-between md:align-items-center">
+                        <h5 class="m-0">Lista de Autores</h5>
+                        <span class="block mt-2 md:mt-0 p-input-icon-left">
+                            <i class="pi pi-search"></i>
+                            
+                            <input pInputText type="text" (input)="dt.filterGlobal($event.target.value, 'contains')" placeholder="Search..." />
+                        </span>
+                    </div>
+                    <p class="m-0">En la siguiente lista puede ver los autores</p>
+                </ng-template>
+                <ng-template pTemplate="header">
+                    <tr>
+                        <th pSortableColumn="authorId">ID <p-sortIcon field="authorId"></p-sortIcon></th>
+                        <th pSortableColumn="name">Nombre Completo <p-sortIcon field="name"></p-sortIcon></th>
+                        <th></th>
+                    </tr>
+                </ng-template>
+                <ng-template pTemplate="body" let-author>
+                    <tr>
+                        <td style="width:50%; min-width:10rem;">
+                            <span class="p-column-title">ID</span>
+                            {{author.authorId}}
+                        </td>
+                        <td style="width:50%; min-width:10rem;">
+                            <span class="p-column-title">Name</span>
+                            {{author.name}}
+                        </td>
+                    </tr>
+                </ng-template>
+            </p-table>
+        </div>
+    </div>
+</div>
+
+
+
+<div class="grid">
+    <div class="col-12">
+        <div class="card">
+            <p-table #dt [value]="categoryList" [columns]="cols" responsiveLayout="scroll" [rows]="10" [globalFilterFields]="['category']" [rows]="10" [paginator]="true" [rowsPerPageOptions]="[10,20,30]" [showCurrentPageReport]="true" currentPageReportTemplate="Mostrando {first} a {last} de {totalRecords} registro de categorias" selectionMode="multiple" [rowHover]="true" dataKey="categoryId">
+                <ng-template pTemplate="caption">
+                    <div class="flex flex-column md:flex-row md:justify-content-between md:align-items-center">
+                        <h5 class="m-0">Lista de Categorias</h5>
+                        <span class="block mt-2 md:mt-0 p-input-icon-left">
+                            <i class="pi pi-search"></i>
+                            
+                            <input pInputText type="text" (input)="dt.filterGlobal($event.target.value, 'contains')" placeholder="Search..." />
+                        </span>
+                    </div>
+                    <p class="m-0">En la siguiente lista puede ver las categorías</p>
+                </ng-template>
+                <ng-template pTemplate="header">
+                    <tr>
+                        <th pSortableColumn="categoryId">ID <p-sortIcon field="categoryId"></p-sortIcon></th>
+                        <th pSortableColumn="category">Nombre de Categoría <p-sortIcon field="category"></p-sortIcon></th>
+                        <th></th>
+                    </tr>
+                </ng-template>
+                <ng-template pTemplate="body" let-categories>
+                    <tr>
+                        <td style="width:50%; min-width:10rem;">
+                            <span class="p-column-title">ID</span>
+                            {{categories.categoryId}}
+                        </td>
+                        <td style="width:50%; min-width:10rem;">
+                            <span class="p-column-title">Name</span>
+                            {{categories.category}}
+                        </td>
+                    </tr>
+                </ng-template>
+            </p-table>
+        </div>
+    </div>
+</div>
+
+
+
+<div class="grid">
+    <div class="col-12">
+        <div class="card">
+            <p-table #dt [value]="editorialsList" [columns]="cols" responsiveLayout="scroll" [rows]="10" [globalFilterFields]="['editorial']" [rows]="10" [paginator]="true" [rowsPerPageOptions]="[10,20,30]" [showCurrentPageReport]="true" currentPageReportTemplate="Mostrando {first} a {last} de {totalRecords} registro de editoriales" selectionMode="multiple" [rowHover]="true" dataKey="editorialId">
+                <ng-template pTemplate="caption">
+                    <div class="flex flex-column md:flex-row md:justify-content-between md:align-items-center">
+                        <h5 class="m-0">Lista de Editoriales</h5>
+                        <span class="block mt-2 md:mt-0 p-input-icon-left">
+                            <i class="pi pi-search"></i>
+                            
+                            <input pInputText type="text" (input)="dt.filterGlobal($event.target.value, 'contains')" placeholder="Search..." />
+                        </span>
+                    </div>
+                    <p class="m-0">En la siguiente lista puede ver las editoriales</p>
+                </ng-template>
+                <ng-template pTemplate="header">
+                    <tr>
+                        <th pSortableColumn="editorialId">ID <p-sortIcon field="editorialId"></p-sortIcon></th>
+                        <th pSortableColumn="name">Nombre Editorial <p-sortIcon field="name"></p-sortIcon></th>
+                        <th></th>
+                    </tr>
+                </ng-template>
+                <ng-template pTemplate="body" let-editorials>
+                    <tr>
+                        <td style="width:50%; min-width:10rem;">
+                            <span class="p-column-title">ID</span>
+                            {{editorials.editorialId}}
+                        </td>
+                        <td style="width:50%; min-width:10rem;">
+                            <span class="p-column-title">Name</span>
+                            {{editorials.editorial}}
+                        </td>
+                    </tr>
+                </ng-template>
+            </p-table>
+        </div>
+    </div>
+</div>
+
