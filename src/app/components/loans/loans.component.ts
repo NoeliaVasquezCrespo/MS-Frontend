@@ -1,21 +1,16 @@
-import { Component, OnInit,ViewChild } from '@angular/core';
-import { CountryService } from '../../service/countryservice';
-import { NodeService } from '../../service/nodeservice';
-import { SelectItem } from 'primeng/api';
+import { Component, OnInit } from '@angular/core';
 import { LoansService } from '../../service/service-project/loans.service';
 import {MatTableDataSource} from '@angular/material/table';
-import {MatSort, Sort} from '@angular/material/sort';
-import {MatPaginator} from '@angular/material/paginator';
-import {LiveAnnouncer} from '@angular/cdk/a11y';
 import {FormGroup, FormControl, Validators, FormBuilder} from '@angular/forms';
 import { LoanDetailsService } from '../../service/loansdetails.service';
 import { Loan } from '../../api/Loan';
 import { LoanDetails } from '../../api/LoanDetails';
 import { Book } from '../../api/Book';
 import { BooksService } from '../../service/service-project/books.service';
-
+import Swal from'sweetalert2';
 import { Product } from '../../api/product';
 import { ProductService } from '../../service/productservice';
+
 
 @Component({
   selector: 'app-info-forms',
@@ -70,21 +65,18 @@ export class LoansComponent implements OnInit {
     fechaAct = new Date();
     books:Book[] = [];
     dataSource = new MatTableDataSource();
+    cols: any[];
 
     products: Product[];
     product: Product
    
     rowsPerPageOptions = [5, 10, 20];
-    selectedProducts: Book[];
+    selectedBooks: Book[];
 
-    applyFilter(event: Event) {
-        const filterValue = (event.target as HTMLInputElement).value;
-        this.dataSource.filter = filterValue.trim().toLowerCase();
-    }
   
     
     constructor(private productService: ProductService, private loansService:LoansService , 
-        private fb:FormBuilder, private booksService:BooksService ) {
+        private fb:FormBuilder, private booksService:BooksService, private loanDetailsService:LoanDetailsService ) {
         this.datosPrestamo=this.fb.group({
             clientId: new FormControl('', Validators.required),
             returnDate: new FormControl('', Validators.required)
@@ -93,6 +85,13 @@ export class LoansComponent implements OnInit {
 
     async ngOnInit() :Promise<void>{
     
+        this.cols = [
+            {field: 'id', header: 'ID'},
+            {field: 'title', header: 'Titulo'},
+            {field: 'pages', header: 'Páginas'},
+            {field: 'stock', header: 'Stock'}
+        ];
+
         this.dataSource.data = this.books;
         await this.booksService.getAllActiveBooks().toPromise().then((response) => {
             this.books = response;
@@ -103,20 +102,31 @@ export class LoansComponent implements OnInit {
 
     }
     
-    
-
-    
-    async getAdminData(){
-        /*let respuesta;
-        console.log("PRIMER METODO");
-        await this.adminlistService. getListProvider().toPromise().then((response) => {
-          respuesta = response;
-        }).catch(e => console.error(e));
-    
-        return respuesta;*/
+    async addLoansDetails(loanid:number){
+        console.log(this.selectedBooks);
+        this.selectedBooks.forEach(async b => {
+            console.log("Libro Id");
+            console.log(b.bookId);
+            let bookLoans:LoanDetails={
+                bookId: b.bookId,
+                loanId: loanid,
+                loanStatus: "prestado",
+                status: 1
+            }
+            await this.addLoanDetalils(bookLoans);
+        })
+        this.selectedBooks = null;
     }
-    
-    
+
+    async addLoanDetalils(loanDetails:LoanDetails){
+        this.loanDetailsService.addLoanDetails(loanDetails).subscribe(
+            async resp => {
+              console.log("Prestamo de un Libro Registrado");
+              console.log(resp);
+            }, error => {
+              console.log("error");
+           });
+    }  
   
     addLoan(){
         let addLoans:Loan={
@@ -126,12 +136,29 @@ export class LoansComponent implements OnInit {
             status: 1
         }
        console.log(this.datosPrestamo.value.returnDate);
+       
         this.loansService.addLoan(addLoans).subscribe(
-            resp => {
-              console.log("Prestamo Registrado");
-              console.log(resp);
+            async resp => {
+                console.log("Prestamo Registrado");
+                console.log(resp);
+                await this.addLoansDetails(resp.loanId);
+                this.successNotification();
             }, error => {
               console.log("error");
            });
     }
+
+    successNotification(){
+        Swal.fire({
+          title: 'Prestamo Registrado',
+          text: 'Se registro el prestamo de los libros correctamente',
+          icon: 'success',
+          showCancelButton: false,
+          confirmButtonText: 'Ok',
+        }).then(async (result) => {
+          if (result.value) {
+            location.reload();
+          }
+        })
+      }
 }
