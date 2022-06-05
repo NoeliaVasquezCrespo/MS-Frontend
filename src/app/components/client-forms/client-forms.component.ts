@@ -37,7 +37,7 @@ export class ClientFormsComponent implements OnInit {
             respuesta=response;
         }).catch(e => console.error(e));
         return respuesta;
-  }
+    }
   async postNewClient(client:Client){
       let respuesta;
       await this.clientService.postClient(client).toPromise().then((response) => {

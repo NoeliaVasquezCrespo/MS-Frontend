@@ -61,5 +61,54 @@
                 </ng-template>
             </p-table>
         </div>
+
+        <p-dialog [(visible)]="clientDialog" [style]="{width: '450px'}" header="Product Details" [modal]="true" class="p-fluid">
+            <ng-template pTemplate="content">
+
+                <div class="field">
+                    <label for="name">Nombres</label>
+                    <input type="text" pInputText id="name" [(ngModel)]="client.name" required autofocus [ngClass]="{'ng-invalid ng-dirty' : submitted && !client.name}"/>
+                    <small class="ng-dirty ng-invalid" *ngIf="submitted && !client.name">Name is required.</small>
+                </div>
+
+
+                <div class="field">
+                    <label for="name">Apellidos</label>
+                    <input type="text" pInputText id="lastname" [(ngModel)]="client.lastname" required autofocus [ngClass]="{'ng-invalid ng-dirty' : submitted && !client.lastname}"/>
+                    <small class="ng-dirty ng-invalid" *ngIf="submitted && !client.name">Name is required.</small>
+                </div>
+                <div class="field">
+                    <label for="name">Email</label>
+                    <input type="text" pInputText id="email" [(ngModel)]="client.email" required autofocus [ngClass]="{'ng-invalid ng-dirty' : submitted && !client.lastname}"/>
+                    <small class="ng-dirty ng-invalid" *ngIf="submitted && !client.email">Name is required.</small>
+                </div>
+                <div class="field">
+                    <div>
+                    <span>
+                        <p-dropdown [options]="addresses" [(ngModel)]="selectedDrop" placeholder="Seleccione una direccion" [showClear]="true"></p-dropdown>
+                    </span>
+                    </div>
+                </div>
+
+            </ng-template>
+
+            <ng-template pTemplate="footer">
+                <button pButton pRipple label="Cancel" icon="pi pi-times" class="p-button-text" (click)="hideDialog()"></button>
+                <button pButton pRipple label="Save" icon="pi pi-check" class="p-button-text" (click)="saveClient()"></button>
+            </ng-template>
+        </p-dialog>
+
+        <p-dialog [(visible)]="deleteClientsDialog" header="Confirm" [modal]="true" [style]="{width:'450px'}">
+            <div class="flex align-items-center justify-content-center">
+                <i class="pi pi-exclamation-triangle mr-3" style="font-size: 2rem"></i>
+                <span *ngIf="client">Are you sure you want to delete <b>{{client.name}} - {{client.lastname}}</b>?</span>
+            </div>
+            <ng-template pTemplate="footer">
+                <button pButton pRipple icon="pi pi-times" class="p-button-text" label="No" (click)="deleteClientsDialog = false"></button>
+                <button pButton pRipple icon="pi pi-check" class="p-button-text" label="Yes" (click)="confirmDelete()"></button>
+            </ng-template>
+        </p-dialog>
+
+
     </div>
 </div>

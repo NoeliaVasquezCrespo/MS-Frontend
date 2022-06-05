@@ -18,13 +18,34 @@ export class ClientService {
         console.log(url);
         return this.http.get<Address[]>(url);
     }
+
+    getAddressById(id:number):Observable<Address>{
+        const url = `${this.baseUrl}address/${id}`;
+        console.log(url);
+        return this.http.get<Address>(url);
+    }
+
     postClient(client:Client):Observable<Client>{
         console.log(client);
         const url = `${this.baseUrl}client`;
         return this.http.post<Client>(url,client);
     }
+    updateClient(id:number,client:Client):Observable<Client>{
+        console.log(client);
+        const url = `${this.baseUrl}client/${id}`;
+        return this.http.put<Client>(url,client);
+    }
+    deleteClient(id:number):Observable<boolean>{
+        const url = `${this.baseUrl}client/${id}`;
+        return this.http.delete<boolean>(url);
+    }
     getClients():Observable<ClientDetails[]>{
         const url = `${this.baseUrl}client/details`;
         return this.http.get<ClientDetails[]>(url);
+    }
+    getClientById(id:number){
+        const url = `${this.baseUrl}client/${id}`;
+        return this.http.get<Client>(url);
+
     }
 }
