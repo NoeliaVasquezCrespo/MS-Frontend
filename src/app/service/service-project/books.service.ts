@@ -60,4 +60,13 @@ export class BooksService {
         map(
           response => response, error => error));
   }
+
+  deleteActiveBook(id: Number):Observable<Book>{
+    const url = `${this.baseUrl}books/${id}`;
+    return this.http.delete<Book>(url).pipe(
+        map(
+          response => response));
+  }
+
+  
 }
