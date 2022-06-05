@@ -75,8 +75,7 @@ export class LoansComponent implements OnInit {
     product: Product
    
     rowsPerPageOptions = [5, 10, 20];
-    selectedProducts: Product[];
-    deleteProductsDialog: boolean = false;
+    selectedProducts: Book[];
 
     applyFilter(event: Event) {
         const filterValue = (event.target as HTMLInputElement).value;
