@@ -4,13 +4,10 @@
 			<h5>Agregar Prestamo</h5>
             <p>Ingrese los datos correspondientes para agregar un nuevo prestamo: </p>
             <div class="field">
-                <form [formGroup]="datosPrestamo">
+                <form [formGroup]="datosPrestamo">                
                     <h5>Usuario</h5>
-                    <p-inputNumber formControlName="clientId" from placeholder="userId" mode="decimal" [showButtons]="true" [min]="0" [max]="100">
-                    </p-inputNumber>
-                    <h5>AutoComplete</h5>
-			        <p-autoComplete placeholder="Buscar" id="dd" [dropdown]="true" [multiple]="true" [suggestions]="filteredCountries" (completeMethod)="filterCountry($event)" field="name"></p-autoComplete>
-
+                    <p-dropdown formControlName="clientId" [options]="clients" [(ngModel)]="selectedDrop" placeholder="Seleccione una direccion" [showClear]="true"></p-dropdown>
+			     
                     <h5>Fecha de Retorno</h5>
                     <p-calendar formControlName="returnDate" placeholder="Fecha De Retorno" [showIcon]="true" [showButtonBar]="true"></p-calendar>
                     

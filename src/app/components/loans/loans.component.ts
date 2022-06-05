@@ -3,14 +3,16 @@ import { LoansService } from '../../service/service-project/loans.service';
 import {MatTableDataSource} from '@angular/material/table';
 import {FormGroup, FormControl, Validators, FormBuilder} from '@angular/forms';
 import { LoanDetailsService } from '../../service/loansdetails.service';
+import { ClientService } from '../../service/client.service';
 import { Loan } from '../../api/Loan';
 import { LoanDetails } from '../../api/LoanDetails';
 import { Book } from '../../api/Book';
 import { BooksService } from '../../service/service-project/books.service';
 import Swal from'sweetalert2';
 import { Product } from '../../api/product';
+import { ClientDetails } from '../../api/ClientDetails';
 import { ProductService } from '../../service/productservice';
-
+import {SelectItem} from "primeng/api";
 
 @Component({
   selector: 'app-info-forms',
@@ -67,17 +69,23 @@ export class LoansComponent implements OnInit {
     dataSource = new MatTableDataSource();
     cols: any[];
     countries: [];
-    products: Product[];
+    clientsList: ClientDetails[];
     product: Product
    
     rowsPerPageOptions = [5, 10, 20];
     selectedBooks: Book[];
 
-    filteredCountries: any[];
+    clients:SelectItem[] = [];
+
+    selectedDrop: SelectItem;
+
+    filteredClients: ClientDetails[];
   
     
-    constructor(private productService: ProductService, private loansService:LoansService , 
-        private fb:FormBuilder, private booksService:BooksService, private loanDetailsService:LoanDetailsService ) {
+    constructor(private loansService:LoansService , private fb:FormBuilder, 
+        private booksService:BooksService, private loanDetailsService:LoanDetailsService, 
+        private clientService: ClientService ) {
+
         this.datosPrestamo=this.fb.group({
             clientId: new FormControl('', Validators.required),
             returnDate: new FormControl('', Validators.required)
@@ -92,6 +100,7 @@ export class LoansComponent implements OnInit {
             {field: 'pages', header: 'Páginas'},
             {field: 'stock', header: 'Stock'}
         ];
+        
 
         this.dataSource.data = this.books;
         await this.booksService.getAllActiveBooks().toPromise().then((response) => {
@@ -99,21 +108,31 @@ export class LoansComponent implements OnInit {
           }).catch(e => console.error(e));
           console.log(this.books)
 
-        this.productService.getProducts().then(data => this.products = data);
+        await this.clientService.getClients().toPromise().then((response) => {
+            this.clientsList = response;
+          }).catch(e => console.error(e));
+          console.log(this.clientsList);
+        
+          for(let i=0;i<this.clientsList.length;i++){
+            this.clients.push(
+                {label: this.clientsList[i].name+' '+this.clientsList[i].lastname, value: this.clientsList[i].clientId}
+            );
+        }
+        console.log(this.clientsList)
 
     }
 
-    filterCountry(event) {
-        const filtered: any[] = [];
+    filterClients(event) {
+        const filtered: ClientDetails[] = [];
         const query = event.query;
-        for (let i = 0; i < this.countries.length; i++) {
-            const country = this.countries[i];
-            /*if (country.name.toLowerCase().indexOf(query.toLowerCase()) == 0) {
-                filtered.push(country);
-            }*/
+        for (let i = 0; i < this.clientsList.length; i++) {
+            const client = this.clientsList[i];
+            if (client.name.toLowerCase().indexOf(query.toLowerCase()) == 0) {
+                filtered.push(client);
+            }
         }
 
-        this.filteredCountries = filtered;
+        this.filteredClients = filtered;
     }
     
     async addLoansDetails(loanid:number){

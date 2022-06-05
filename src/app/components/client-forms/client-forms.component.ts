@@ -31,6 +31,7 @@ export class ClientFormsComponent implements OnInit {
         }
         console.log(this.listAddresses)
     }
+    
     async getAddresses(){
         let respuesta;
         await this.clientService.getAddresses().toPromise().then((response) => {
