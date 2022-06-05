@@ -37,6 +37,8 @@ import { LoansComponent } from './components/loans/loans.component';
 import {ClientFormsComponent} from "./components/client-forms/client-forms.component";
 import {ClientListComponent} from "./components/client-list/client-list.component";
 import { BookInactiveListComponent } from './components/book-inactive-list/book-inactive-list.component';
+import {AddressListComponent} from "./components/address-list/address-list.component";
+import {AddressFormsComponent} from "./components/address-forms/address-forms.component";
 @NgModule({
     imports: [
         RouterModule.forRoot([
@@ -44,6 +46,8 @@ import { BookInactiveListComponent } from './components/book-inactive-list/book-
                 path: '', component: AppMainComponent,
                 children: [
                     {path: '', component: DashboardComponent},
+                    {path: 'uikit/addressForms', component: AddressFormsComponent},
+                    {path: 'uikit/addressList', component: AddressListComponent},
                     {path: 'uikit/clientForm', component: ClientFormsComponent},
                     {path: 'uikit/clientList', component: ClientListComponent},
                     {path: 'uikit/bookForm', component: BookFormsComponent},

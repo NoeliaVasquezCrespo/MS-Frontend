@@ -1,1 +1,91 @@
-<p>address-list works!</p>
+<div class="grid">
+    <div class="col-12">
+        <div class="card">
+
+            <p-table #dt [value]="listaDirecciones" [columns]="cols" responsiveLayout="scroll" [rows]="10" [globalFilterFields]="['nombre','apellido','email','address']" [rows]="10" [paginator]="true" [rowsPerPageOptions]="[10,20,30]" [showCurrentPageReport]="true" currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries" [(selection)]="selectedAddresses" selectionMode="multiple" [rowHover]="true" dataKey="id">
+                <ng-template pTemplate="caption">
+                    <div class="flex flex-column md:flex-row md:justify-content-between md:align-items-center">
+                        <h5 class="m-0">Manage Products</h5>
+                        <span class="block mt-2 md:mt-0 p-input-icon-left">
+                            <i class="pi pi-search"></i>
+                            <input pInputText type="text" (input)="dt.filterGlobal($event.target.value, 'contains')" placeholder="Search..." />
+                        </span>
+                    </div>
+                </ng-template>
+                <ng-template pTemplate="header">
+                    <tr>
+                        <th style="width: 3rem">
+                            <p-tableHeaderCheckbox></p-tableHeaderCheckbox>
+                        </th>
+                        <th pSortableColumn="addressId">Id <p-sortIcon field="addressId"></p-sortIcon></th>
+                        <th pSortableColumn="address">Direccion <p-sortIcon field="address"></p-sortIcon></th>
+                        <th pSortableColumn="postalCode">Codigo Postal <p-sortIcon field="postalCode"></p-sortIcon></th>
+                        <th></th>
+                    </tr>
+                </ng-template>
+                <ng-template pTemplate="body" let-address>
+                    <tr>
+                        <td>
+                            <p-tableCheckbox [value]="listaDirecciones"></p-tableCheckbox>
+                        </td>
+                        <td style="width:14%; min-width:10rem;">
+                            <span class="p-column-title">Id</span>
+                            {{address.addressId}}
+                        </td>
+
+                        <td style="width:14%; min-width:10rem;">
+                            <span class="p-column-title">Id</span>
+                            {{address.address}}
+                        </td>
+                        <td style="width:14%; min-width:10rem;">
+                            <span class="p-column-title">Id</span>
+                            {{address.postalCode}}
+                        </td>
+
+                        <td>
+                            <div class="flex">
+                                <button pButton pRipple icon="pi pi-pencil" class="p-button-rounded p-button-success mr-2" (click)="editAddress(address)"></button>
+                                <button pButton pRipple icon="pi pi-trash" class="p-button-rounded p-button-warning" (click)="deleteAddress(address)"></button>
+                            </div>
+                        </td>
+                    </tr>
+                </ng-template>
+            </p-table>
+        </div>
+
+        <p-dialog [(visible)]="addressDialog" [style]="{width: '450px'}" header="Product Details" [modal]="true" class="p-fluid">
+            <ng-template pTemplate="content">
+
+                <div class="field">
+                    <label for="name">Direccion</label>
+                    <input type="text" pInputText id="name" [(ngModel)]="address.address" required autofocus [ngClass]="{'ng-invalid ng-dirty' : submitted && !address.address}"/>
+                    <small class="ng-dirty ng-invalid" *ngIf="submitted && !address.address">Name is required.</small>
+                </div>
+
+                <div class="field">
+                    <label for="name">Codigo Postal</label>
+                    <input type="text" pInputText id="email" [(ngModel)]="address.postalCode" required autofocus [ngClass]="{'ng-invalid ng-dirty' : submitted && !address.postalCode}"/>
+                    <small class="ng-dirty ng-invalid" *ngIf="submitted && !address.postalCode">Name is required.</small>
+                </div>
+
+            </ng-template>
+
+            <ng-template pTemplate="footer">
+                <button pButton pRipple label="Cancel" icon="pi pi-times" class="p-button-text" (click)="hideDialog()"></button>
+                <button pButton pRipple label="Save" icon="pi pi-check" class="p-button-text" (click)="saveAddress()"></button>
+            </ng-template>
+        </p-dialog>
+
+        <p-dialog [(visible)]="deleteAddressDialog" header="Confirm" [modal]="true" [style]="{width:'450px'}">
+            <div class="flex align-items-center justify-content-center">
+                <i class="pi pi-exclamation-triangle mr-3" style="font-size: 2rem"></i>
+                <span *ngIf="address">Are you sure you want to delete <b>{{address.address}}</b>?</span>
+            </div>
+            <ng-template pTemplate="footer">
+                <button pButton pRipple icon="pi pi-times" class="p-button-text" label="No" (click)="deleteAddressDialog = false"></button>
+                <button pButton pRipple icon="pi pi-check" class="p-button-text" label="Yes" (click)="confirmDelete()"></button>
+            </ng-template>
+        </p-dialog>
+
+    </div>
+</div>

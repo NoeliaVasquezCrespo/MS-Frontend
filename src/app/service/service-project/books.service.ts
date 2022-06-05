@@ -16,7 +16,7 @@ export class BooksService {
       const url = `${this.baseUrl}books/list/1`;
       return this.http.get<Book[]>(url).pipe(
         map(
-          response => response, error => error));       
+          response => response, error => error));
   }
 
   getAllInactiveBooks():Observable<Book[]>{

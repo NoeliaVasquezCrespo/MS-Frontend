@@ -1,0 +1,28 @@
+<div class="grid">
+    <div class="col-12 md:col-6">
+        <div class="card p-fluid">
+            <h5>Agregar Direccion</h5>
+            <p>Ingrese los datos correspondientes para agregar la direccion a la lista: </p>
+
+            <div class="field">
+                <div>
+                    <span class="p-input-icon-left">
+                        <i class="pi pi-book"></i>
+                        <input pInputText type="text" [(ngModel)]="direccion.address" placeholder="Nombre de direccion" />
+                    </span>
+                </div>
+            </div>
+            <div class="field">
+                <div>
+                    <span class="p-input-icon-left">
+                        <i class="pi pi-book"></i>
+                        <input pInputText type="text" [(ngModel)]="direccion.postalCode" placeholder="Codigo Postal" />
+                    </span>
+                </div>
+            </div>
+
+            <button pButton pRipple (click)="agregarDireccion()" type="button" label="Agregar Direccion" class="p-button-rounded p-button-success mr-2 mb-2"></button>
+
+        </div>
+    </div>
+</div>

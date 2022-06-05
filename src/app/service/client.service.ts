@@ -9,7 +9,7 @@ import {ClientDetails} from "../api/ClientDetails";
   providedIn: 'root'
 })
 export class ClientService {
-    private baseUrl:string = 'http://localhost:7000/v1/api/';
+    private baseUrl:string = 'http://localhost:8743/v1/api/';
     constructor(private http:HttpClient) {
 
     }
@@ -24,7 +24,23 @@ export class ClientService {
         console.log(url);
         return this.http.get<Address>(url);
     }
+    updateAddress(id:number,addres:Address){
+        const url = `${this.baseUrl}address/${id}`;
+        console.log(url);
+        return this.http.put<Address>(url,addres);
+    }
 
+    deleteAddress(id:number):Observable<boolean>{
+        const url = `${this.baseUrl}address/${id}`;
+        console.log(url);
+        return this.http.delete<boolean>(url);
+    }
+    postAddress(address:Address):Observable<Address>{
+        const url = `${this.baseUrl}address`;
+        console.log(url);
+        return this.http.post<Address>(url,address);
+
+    }
     postClient(client:Client):Observable<Client>{
         console.log(client);
         const url = `${this.baseUrl}client`;

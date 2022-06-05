@@ -145,6 +145,8 @@ import { LoansComponent } from './components/loans/loans.component';
 import { BookListComponent } from './components/book-list/book-list.component';
 import { ClientFormsComponent } from './components/client-forms/client-forms.component';
 import { ClientListComponent} from "./components/client-list/client-list.component";
+import {AddressListComponent} from "./components/address-list/address-list.component";
+import {AddressFormsComponent} from "./components/address-forms/address-forms.component";
 import { MaterialModule } from './material.module';
 import { BookInactiveListComponent } from './components/book-inactive-list/book-inactive-list.component';
 
@@ -287,7 +289,9 @@ import { BookInactiveListComponent } from './components/book-inactive-list/book-
         BookListComponent,
         ClientFormsComponent,
         ClientListComponent,
-        BookInactiveListComponent
+        BookInactiveListComponent,
+        AddressListComponent,
+        AddressFormsComponent,
     ],
     providers: [
         {provide: LocationStrategy, useClass: HashLocationStrategy},
