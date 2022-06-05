@@ -47,6 +47,13 @@ export class BooksService {
             response => response, error => error));
   }
 
+  updateStockBook(id: number):Observable<Book>{
+    const url = `${this.baseUrl}books/id/${id}`;
+    return this.http.put<Book>(url, {}).pipe(
+        map(
+          response => response, error => error));
+}
+
   activeBookById(id: Number):Observable<Book>{
     const url = `${this.baseUrl}books/status/${id}`;
     return this.http.put<Book>(url,id).pipe(

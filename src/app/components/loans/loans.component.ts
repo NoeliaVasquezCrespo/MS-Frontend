@@ -66,13 +66,14 @@ export class LoansComponent implements OnInit {
     books:Book[] = [];
     dataSource = new MatTableDataSource();
     cols: any[];
-
+    countries: [];
     products: Product[];
     product: Product
    
     rowsPerPageOptions = [5, 10, 20];
     selectedBooks: Book[];
 
+    filteredCountries: any[];
   
     
     constructor(private productService: ProductService, private loansService:LoansService , 
@@ -84,7 +85,7 @@ export class LoansComponent implements OnInit {
     }
 
     async ngOnInit() :Promise<void>{
-    
+        this.countries = [];
         this.cols = [
             {field: 'id', header: 'ID'},
             {field: 'title', header: 'Titulo'},
@@ -101,6 +102,19 @@ export class LoansComponent implements OnInit {
         this.productService.getProducts().then(data => this.products = data);
 
     }
+
+    filterCountry(event) {
+        const filtered: any[] = [];
+        const query = event.query;
+        for (let i = 0; i < this.countries.length; i++) {
+            const country = this.countries[i];
+            /*if (country.name.toLowerCase().indexOf(query.toLowerCase()) == 0) {
+                filtered.push(country);
+            }*/
+        }
+
+        this.filteredCountries = filtered;
+    }
     
     async addLoansDetails(loanid:number){
         console.log(this.selectedBooks);
@@ -114,8 +128,19 @@ export class LoansComponent implements OnInit {
                 status: 1
             }
             await this.addLoanDetalils(bookLoans);
+            await this.updateStockBook(b.bookId);
         })
         this.selectedBooks = null;
+    }
+
+    async updateStockBook(id:number){
+        this.booksService.updateStockBook(id).subscribe(
+            async resp => {
+              console.log("Stock Libro Actualizado");
+              console.log(resp.stock);
+            }, error => {
+              console.log("error");
+           });
     }
 
     async addLoanDetalils(loanDetails:LoanDetails){
