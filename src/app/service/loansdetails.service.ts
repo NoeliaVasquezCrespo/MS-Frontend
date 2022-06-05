@@ -8,7 +8,7 @@ import { LoanDetails } from '../api/LoanDetails';
     providedIn: 'root'
   })
 export class LoanDetailsService {
-    private baseUrl:string = 'http://localhost:8080/v1/api/';
+    private baseUrl:string = 'http://localhost:8080/ms-loan/v1/api/';
 
     constructor(private http:HttpClient){ }
 

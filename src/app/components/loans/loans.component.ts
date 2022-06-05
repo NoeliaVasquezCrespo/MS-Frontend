@@ -12,6 +12,7 @@ import { LoanDetailsService } from '../../service/loansdetails.service';
 import { Loan } from '../../api/Loan';
 import { LoanDetails } from '../../api/LoanDetails';
 import { Book } from '../../api/Book';
+import { BooksService } from '../../service/service-project/books.service';
 
 import { Product } from '../../api/product';
 import { ProductService } from '../../service/productservice';
@@ -66,102 +67,46 @@ export class LoansComponent implements OnInit {
     prestamo: Loan;
     datosPrestamo: FormGroup;
     detallePrestamo: LoanDetails;
-    detallePrestamo2: LoanDetails;
-    detallePrestamo3: LoanDetails;
-
-    dataSource = new MatTableDataSource();
     fechaAct = new Date();
+    books:Book[] = [];
+    dataSource = new MatTableDataSource();
 
     products: Product[];
     product: Product
-    cols: any[];
-    statuses: any[];
+   
     rowsPerPageOptions = [5, 10, 20];
     selectedProducts: Product[];
     deleteProductsDialog: boolean = false;
-
-    
-    @ViewChild(MatPaginator) paginatorProducts!: MatPaginator;
-    dataSourceProducts!: MatTableDataSource<Book>;
-
-    @ViewChild(MatPaginator, {static:true}) paginator: MatPaginator;
-    @ViewChild(MatSort) sort: MatSort;
-
 
     applyFilter(event: Event) {
         const filterValue = (event.target as HTMLInputElement).value;
         this.dataSource.filter = filterValue.trim().toLowerCase();
     }
-    books:Book[] = [];
-    displayedColumns: string[] = ['id', 'nombre', 'apellido', 'correo', 'edad','opciones'];
-    countries: any[];
-    filteredCountries: any[];
-    selectedCountryAdvanced: any[];
-    valSlider = 50;
-    valColor = '#424242';
-    valRadio: string;
-    valCheck: string[] = [];
-    valSwitch: boolean;
-    cities: SelectItem[];
-    selectedList: SelectItem;
-    selectedDrop: SelectItem;
-    selectedMulti: string[] = [];
-    treeSelectNodes: any[];
-    selectedNode: SelectItem;
-    valToggle = false;
-    paymentOptions: any[];
-    valSelect1: string;
-    valSelect2: string;
-    valueKnob = 20;
-    selectedDate:any;
-
-    constructor(private productService: ProductService, private loansService:LoansService , private fb:FormBuilder, private _liveAnnouncer: LiveAnnouncer,
-        private countryService: CountryService, private nodeService: NodeService) {
+  
+    
+    constructor(private productService: ProductService, private loansService:LoansService , 
+        private fb:FormBuilder, private booksService:BooksService ) {
         this.datosPrestamo=this.fb.group({
             clientId: new FormControl('', Validators.required),
             returnDate: new FormControl('', Validators.required)
-          })
+        })
     }
 
     async ngOnInit() :Promise<void>{
-        this.books = [];
+    
         this.dataSource.data = this.books;
+        await this.booksService.getAllActiveBooks().toPromise().then((response) => {
+            this.books = response;
+          }).catch(e => console.error(e));
+          console.log(this.books)
 
         this.productService.getProducts().then(data => this.products = data);
 
-        this.cols = [
-            {field: 'name', header: 'Name'},
-            {field: 'price', header: 'Price'},
-            {field: 'category', header: 'Category'},
-            {field: 'rating', header: 'Reviews'},
-            {field: 'inventoryStatus', header: 'Status'}
-        ];
-
-        this.statuses = [
-            {label: 'INSTOCK', value: 'instock'},
-            {label: 'LOWSTOCK', value: 'lowstock'},
-            {label: 'OUTOFSTOCK', value: 'outofstock'}
-        ];
     }
-    ngAfterViewInit(){
-        this.dataSource.paginator= this.paginator;
-        this.dataSource.sort = this.sort;
-      }
     
-      announceSortChange(sortState: Sort) {
-        if (sortState.direction) {
-          this._liveAnnouncer.announce(`Sorted ${sortState.direction}ending`);
-        } else {
-          this._liveAnnouncer.announce('Sorting cleared');
-        }
-      }
+    
 
-    confirmDeleteSelected(){
-        this.deleteProductsDialog = false;
-        this.products = this.products.filter(val => !this.selectedProducts.includes(val));
-        //this.messageService.add({severity: 'success', summary: 'Successful', detail: 'Products Deleted', life: 3000});
-        this.selectedProducts = null;
-    }
+    
     async getAdminData(){
         /*let respuesta;
         console.log("PRIMER METODO");
