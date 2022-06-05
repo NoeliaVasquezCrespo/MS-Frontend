@@ -12,12 +12,18 @@ export class BooksService {
   private baseUrl:string = 'http://localhost:7878/v1/api/';
   constructor(private http:HttpClient){ }
 
-  getAllBooks():Observable<Book[]>{
-      const url = `${this.baseUrl}books`;
+  getAllActiveBooks():Observable<Book[]>{
+      const url = `${this.baseUrl}books/list/1`;
       return this.http.get<Book[]>(url).pipe(
         map(
-          response => response, error => error));
-          
+          response => response, error => error));       
+  }
+
+  getAllInactiveBooks():Observable<Book[]>{
+    const url = `${this.baseUrl}books/list/0`;
+    return this.http.get<Book[]>(url).pipe(
+      map(
+        response => response, error => error));
   }
 
   addBook(book:Book):Observable<Book>{
@@ -39,5 +45,12 @@ export class BooksService {
       return this.http.put<Book>(url, book).pipe(
           map(
             response => response, error => error));
+  }
+
+  activeBookById(id: Number):Observable<Book>{
+    const url = `${this.baseUrl}books/status/${id}`;
+    return this.http.put<Book>(url,id).pipe(
+        map(
+          response => response, error => error));
   }
 }

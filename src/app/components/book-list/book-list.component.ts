@@ -35,16 +35,15 @@ export class BookListComponent implements OnInit {
       this.productService.getProducts().then(data => this.products = data);
       this.bookList=await this.getBook();
       this.cols = [
-          {field: 'name', header: 'Name'},
-          {field: 'price', header: 'Price'},
-          {field: 'category', header: 'Category'},
-          {field: 'rating', header: 'Reviews'},
-          {field: 'inventoryStatus', header: 'Status'}
+          {field: 'titulo', header: 'Titulo'},
+          {field: 'paginas', header: 'Paginas'},
+          {field: 'idioma', header: 'Idioma'},
+          {field: 'descripcion', header: 'Descripcion'},
+          {field: 'idAutor', header: 'ID Autor'}
       ];
 
       this.statuses = [
           {label: 'INSTOCK', value: 'instock'},
-          {label: 'LOWSTOCK', value: 'lowstock'},
           {label: 'OUTOFSTOCK', value: 'outofstock'}
       ];
   }
@@ -136,7 +135,7 @@ export class BookListComponent implements OnInit {
 
   async getBook(){
     let respuesta:Book[];
-    await this.booksService.getAllBooks().toPromise().then((response) => {
+    await this.booksService.getAllActiveBooks().toPromise().then((response) => {
       respuesta = response;
     }).catch(e => console.error(e));
     console.log(respuesta)
