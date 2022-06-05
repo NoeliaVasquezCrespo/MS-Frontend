@@ -3,6 +3,9 @@ import { Book } from '../../api/Book';
 import { BooksService } from '../../service/service-project/books.service';
 import Swal from 'sweetalert2';
 import { Router } from '@angular/router';
+import { Author } from 'src/app/api/Author';
+import {SelectItem} from "primeng/api"
+import { Editorial } from 'src/app/api/Editorial';
 
 @Component({
  
@@ -12,7 +15,7 @@ import { Router } from '@angular/router';
 export class BookListComponent implements OnInit {
 
   
-  productDialog: boolean;
+  bookDialog: boolean;
   deleteProductDialog: boolean = false;
   deleteProductsDialog: boolean = false;
   
@@ -24,7 +27,19 @@ export class BookListComponent implements OnInit {
   bookList:Book[];
   book: Book;
   rowsPerPageOptions = [5, 10, 20];
+  books:Book={
+    authorId: 0, bookId: 0, editorialId: 0, title: "", description: "", language: "", pages: 0, bookCover: "", stock: 0, status: 0,
+    releaseDate: undefined
+  }
+    
+  listAuthor:Author[]=[];
+  authors:SelectItem[]=[];
 
+  listEditorials:Editorial[]=[];
+  editorials:SelectItem[]=[];
+
+  selectedDropAuthor: SelectItem;
+  selectedDropEditorial: SelectItem;
   constructor(private booksService:BooksService,
               private router : Router) {}
 
@@ -95,7 +110,7 @@ export class BookListComponent implements OnInit {
   
 
   hideDialog() {
-      this.productDialog = false;
+      this.bookDialog = false;
       this.submitted = false;
   }
   
@@ -107,4 +122,70 @@ export class BookListComponent implements OnInit {
     console.log(respuesta)
     return respuesta;
   }
+
+  async editBook(book: Book) {
+    console.log(book);
+    let bookResp:Book=await this.getBookById(book.bookId);
+    console.log(bookResp);
+    this.book = {...bookResp};
+    this.bookDialog = true;
+    for(let i=0;i<this.authors.length;i++){
+        if(this.authors[i].value['authorId']===this.book.authorId){
+            this.selectedDropAuthor=this.authors[i].value;
+        }
+    }
+    console.log(this.selectedDropAuthor);
+
+    for(let i=0;i<this.editorials.length;i++){
+      if(this.editorials[i].value['editorialId']===this.book.editorialId){
+          this.selectedDropEditorial=this.editorials[i].value;
+      }
+  }
+  console.log(this.selectedDropEditorial);
+
+}
+
+async getBookById(id:number){
+  let respuesta;
+  await this.booksService.getBookById(id).toPromise().then((response) => {
+      respuesta=response;
+  }).catch(e => console.error(e));
+  return respuesta;
+}
+
+async saveBook() {
+  console.log(this.book);
+  await this.updateBook(this.book.bookId);
+
+  //this.client = [...this.client];
+  this.bookDialog = false;
+  // this.submitted = true;
+  this.bookList=[];
+  this.bookList = await this.getBook();
+  console.log(this.bookList)
+  await this.successNotificationEditBookCorrectly();
+}
+
+async updateBook(id){
+  let respuesta;
+  await this.booksService.updateBooks(id,this.book).toPromise().then((response) => {
+      respuesta=response;
+  }).catch(e => console.error(e));
+  return respuesta;
+}
+
+async successNotificationEditBookCorrectly(){
+  let self = this
+  Swal.fire({
+    icon: 'success',
+    title: 'Datos del libro modificados corrctamente',
+    showConfirmButton: true,
+    confirmButtonText: 'Aceptar',
+  }).then(async (result) => {
+    if (result.value) {
+      console.log('Volviendo a lista de libros disponibles')
+      await self.router.navigateByUrl('/uikit/bookList');
+    }
+  })
+}
 }

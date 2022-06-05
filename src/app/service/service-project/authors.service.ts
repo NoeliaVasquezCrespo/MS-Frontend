@@ -18,5 +18,11 @@ export class AuthorsService {
     return this.http.get<Author[]>(url);
     
   }
+
+  addAuthor(author:Author):Observable<Author>{
+    console.log(author);
+    const url = `${this.baseUrl}authors`;
+    return this.http.post<Author>(url,author);
+  }
   
 }

@@ -9,7 +9,7 @@ import {ClientDetails} from "../api/ClientDetails";
   providedIn: 'root'
 })
 export class ClientService {
-    private baseUrl:string = 'http://localhost:7000/v1/api/';
+    private baseUrl:string = 'http://localhost:8743/v1/api/';
     constructor(private http:HttpClient) {
 
     }

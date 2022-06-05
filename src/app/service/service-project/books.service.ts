@@ -8,7 +8,6 @@ import { Book } from '../../api/Book';
 })
 export class BooksService {
 
-  // private baseUrl:string = 'http://localhost:8080/v1/api/';
   private baseUrl:string = 'http://localhost:7878/v1/api/';
   constructor(private http:HttpClient){ }
 
@@ -41,10 +40,10 @@ export class BooksService {
   }
 
   updateBooks(id: number, book:Book):Observable<Book>{
-      const url = `${this.baseUrl}books/${id}`;
-      return this.http.put<Book>(url, book).pipe(
-          map(
-            response => response, error => error));
+    console.log(book);
+    const url = `${this.baseUrl}books/${id}`;
+    return this.http.put<Book>(url,book);
+
   }
 
   activeBookById(id: Number):Observable<Book>{

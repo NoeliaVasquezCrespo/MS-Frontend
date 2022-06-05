@@ -7,7 +7,7 @@
                 <div>
                     <span class="p-input-icon-left">
                         <i class="pi pi-book"></i>
-                        <input pInputText type="text" placeholder="Título del libro" />
+                        <input pInputText type="text" [(ngModel)]="title" placeholder="Título del libro" />
                     </span>
                 </div>
 			</div>
@@ -16,13 +16,13 @@
                     <div class="col-12 mb-2 lg:col-6 lg:mb-0">
                         <span class="p-input-icon-left">
                             <i class="pi pi-tag"></i>
-                            <p-calendar [showIcon]="true" placeholder="Fecha de lanzamiento" [showButtonBar]="true" [(ngModel)]="selectedDate"></p-calendar>
+                            <p-calendar [showIcon]="true" placeholder="Fecha de lanzamiento" [(ngModel)]="releaseDate" [showButtonBar]="true" [(ngModel)]="selectedDate"></p-calendar>
                         </span>
                     </div>
                     <div class="col-12 mb-2 lg:col-6 lg:mb-0">
                         <span class="p-input-icon-left">
                             <i class="pi pi-tag"></i>
-                            <input pInputText type="text" placeholder="# Páginas" />
+                            <input pInputText type="number" [(ngModel)]="pages" placeholder="# Páginas" />
                         </span>
                     </div>
                 </div>    
@@ -30,21 +30,22 @@
 			<div class="field">
                 <div>
                     <span> 
-                        <p-dropdown [options]="authorsList" [(ngModel)]="selectedAuthor" placeholder="Autor" [showClear]="true"></p-dropdown>
+                        <p-dropdown [options]=" selectedAuthor" [(ngModel)]="selectedDropAuthor" placeholder="Autor" [showClear]="true"></p-dropdown>
                     </span>
                 </div>
 			</div>
             <div class="field">
                 <div>
                     <span> 
-                        <p-dropdown [options]="cities" [(ngModel)]="selectedEditorial" placeholder="Editorial" [showClear]="true"></p-dropdown>
+                        <p-dropdown [options]="selectedEditorial" [(ngModel)]="selectedDropEditorial" placeholder="Editorial" [showClear]="true"></p-dropdown>
                     </span>
                 </div>
 			</div>
             <div class="field">
                 <div>
-                    <span> 
-                        <p-dropdown [options]="cities" [(ngModel)]="selectedDrop" placeholder="Idioma" [showClear]="true"></p-dropdown>
+                    <span class="p-input-icon-left">
+                        <i class="pi pi-tag"></i>
+                        <input pInputText type="text" [(ngModel)]="language" placeholder="Idioma" />
                     </span>
                 </div>
 			</div>
@@ -52,7 +53,15 @@
                 <div>
                     <span class="p-input-icon-left">
                         <i class="pi pi-file"></i>
-                        <input pInputText type="text" placeholder="Descripción del libro" />
+                        <input pInputText type="text" [(ngModel)]="description"  placeholder="Descripción del libro" />
+                    </span>
+                </div>
+			</div>
+            <div class="field">
+                <div>
+                    <span class="p-input-icon-left">
+                        <i class="pi pi-wallet"></i>
+                        <input pInputText type="number" [(ngModel)]="stock" placeholder="Stock" />
                     </span>
                 </div>
 			</div>
@@ -60,11 +69,12 @@
                 <div>
                     <span class="p-input-icon-left">
                         <i class="pi pi-star-fill"></i>
-                        <input pInputText type="text" placeholder="URL de la portada" />
+                        <input pInputText type="text" [(ngModel)]="bookCover" placeholder="URL de la portada" />
                     </span>
                 </div>
 			</div>
-            <button pButton pRipple type="button" label="Agregar libro" class="p-button-rounded p-button-success mr-2 mb-2"></button>	
+            
+            <button pButton pRipple (click)="agregarLibro()" type="button" label="Agregar libro" class="p-button-rounded p-button-success mr-2 mb-2"></button>	
 		</div>
 	</div>
 
